@@ -1,0 +1,142 @@
+.navigation {
+  width: 280px;
+  background: linear-gradient(180deg, #7B7FE0 0%, #6366DC 100%);
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  transition: width 0.3s ease;
+  z-index: 1000;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.navigation.collapsed {
+  width: 80px;
+}
+
+/* Header */
+.nav-header {
+  padding: 25px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  min-width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.navigation.collapsed .logo-text {
+  display: none;
+}
+
+.logo-text h1 {
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 2px 0;
+}
+
+.logo-text p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  margin: 0;
+}
+
+/* Menu */
+.nav-menu {
+  flex: 1;
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 14px 20px;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 5px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.nav-item:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  font-weight: 600;
+}
+
+.nav-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-icon {
+  font-size: 22px;
+  min-width: 25px;
+  text-align: center;
+}
+
+.navigation.collapsed .nav-text {
+  display: none;
+}
+
+/* New Order Button */
+.new-order-btn {
+  margin: 20px 15px;
+  padding: 14px 20px;
+  background: white;
+  color: #7B7FE0;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.new-order-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.navigation.collapsed .btn-text {
+  display: none;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .navigation {
+    transform: translateX(-280px);
+  }
+
+  .navigation.open {
+    transform: translateX(0);
+  }
+}

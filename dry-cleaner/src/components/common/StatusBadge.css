@@ -1,0 +1,33 @@
+.status-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.status-small {
+  padding: 4px 10px;
+  font-size: 11px;
+}
+
+.status-medium {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.status-large {
+  padding: 8px 18px;
+  font-size: 15px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .status-badge {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+}
