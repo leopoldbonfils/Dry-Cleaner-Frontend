@@ -1,8 +1,39 @@
+/* Dark Theme CSS Variables */
+:root {
+  /* Backgrounds */
+  --bg-primary: #0D1117;
+  --bg-secondary: #161B22;
+  --bg-tertiary: #21262D;
+  --bg-quaternary: #30363D;
+
+  /* Text */
+  --text-primary: #F6F8FA;
+  --text-secondary: #8B949E;
+  --text-tertiary: #6E7681;
+
+  /* Borders */
+  --border-default: #30363D;
+  --border-medium: #444C56;
+  --border-strong: #555C64;
+
+  /* Buttons */
+  --button-primary-bg: #F6F8FA;
+  --button-primary-text: #0D1117;
+  --button-secondary-bg: #21262D;
+  --button-secondary-text: #F6F8FA;
+
+  /* Shadows */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.6);
+}
+
 /* Main App Layout */
 .app-container {
   display: flex;
   min-height: 100vh;
-  background: #F8F9FA;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .main-content {
@@ -10,6 +41,7 @@
   margin-left: 280px;
   transition: margin-left 0.3s ease;
   min-height: 100vh;
+  background: var(--bg-primary);
 }
 
 .main-content.collapsed {

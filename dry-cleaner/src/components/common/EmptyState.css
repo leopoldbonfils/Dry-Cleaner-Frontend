@@ -6,13 +6,14 @@
 .empty-icon {
   font-size: 80px;
   margin-bottom: 20px;
-  opacity: 0.3;
+  opacity: 0.2;
   animation: float 3s ease-in-out infinite;
+  color: #8B949E;
 }
 
 .empty-message {
   font-size: 18px;
-  color: #95A5A6;
+  color: #8B949E;
   font-weight: 500;
   margin: 0;
 }

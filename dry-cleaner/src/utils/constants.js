@@ -34,6 +34,4 @@ export const MENU_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: '📊', path: '/dashboard' },
   { id: 'orders', label: 'All Orders', icon: '📋', path: '/orders' },
   { id: 'search', label: 'Search Orders', icon: '🔍', path: '/search' },
-  { id: 'revenue', label: 'Revenue', icon: '💰', path: '/revenue', disabled: true },
-  { id: 'clients', label: 'Clients', icon: '👥', path: '/clients', disabled: true },
 ];

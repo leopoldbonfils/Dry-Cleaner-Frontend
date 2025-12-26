@@ -1,31 +1,33 @@
 .stat-card {
-  background: white;
+  background: var(--bg-secondary);
   border-radius: 16px;
   padding: 25px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-left: 5px solid;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 1px solid var(--border-default);
+  border-left: 4px solid transparent;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-medium);
 }
 
 .stat-card-orders {
-  border-left-color: #7B7FE0;
+  border-left-color: var(--text-secondary);
 }
 
 .stat-card-pending {
-  border-left-color: #FFA726;
+  border-left-color: var(--text-tertiary);
 }
 
 .stat-card-income {
-  border-left-color: #66BB6A;
+  border-left-color: var(--text-secondary);
 }
 
 .stat-card-unpaid {
-  border-left-color: #EF5350;
+  border-left-color: var(--text-tertiary);
 }
 
 .stat-header {
@@ -40,7 +42,7 @@
 
 .stat-label {
   font-size: 14px;
-  color: #7F8C8D;
+  color: var(--text-secondary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -50,7 +52,7 @@
 .stat-value {
   font-size: 36px;
   font-weight: 700;
-  color: #2C3E50;
+  color: var(--text-primary);
 }
 
 .stat-icon {
@@ -61,22 +63,23 @@
   align-items: center;
   justify-content: center;
   font-size: 28px;
+  color: var(--text-primary);
 }
 
 .stat-icon-orders {
-  background: linear-gradient(135deg, #7B7FE0 0%, #6366DC 100%);
+  background: linear-gradient(135deg, #8B949E 0%, #6E7681 100%);
 }
 
 .stat-icon-pending {
-  background: linear-gradient(135deg, #FFA726 0%, #FB8C00 100%);
+  background: linear-gradient(135deg, #A0AEC0 0%, #8B949E 100%);
 }
 
 .stat-icon-income {
-  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  background: linear-gradient(135deg, #8B949E 0%, #6E7681 100%);
 }
 
 .stat-icon-unpaid {
-  background: linear-gradient(135deg, #EF5350 0%, #E53935 100%);
+  background: linear-gradient(135deg, #6E7681 0%, #555C64 100%);
 }
 
 /* Mobile responsive */

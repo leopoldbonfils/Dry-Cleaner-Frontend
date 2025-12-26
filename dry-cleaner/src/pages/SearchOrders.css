@@ -14,12 +14,13 @@
 }
 
 .results-info {
-  color: #7F8C8D;
+  color: #8B949E;
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 20px;
   padding: 12px;
-  background: #F8F9FA;
+  background: #21262D;
+  border: 1px solid #30363D;
   border-radius: 8px;
 }
 
@@ -29,8 +30,8 @@
 }
 
 .result-card {
-  background: white;
-  border: 2px solid #F0F0F0;
+  background: #161B22;
+  border: 1px solid #30363D;
   border-radius: 14px;
   padding: 20px;
   cursor: pointer;
@@ -38,8 +39,9 @@
 }
 
 .result-card:hover {
-  border-color: #7B7FE0;
-  box-shadow: 0 4px 15px rgba(123, 127, 224, 0.15);
+  border-color: #444C56;
+  background: #21262D;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transform: translateY(-3px);
 }
 
@@ -55,7 +57,7 @@
 .result-code {
   font-size: 17px;
   font-weight: 700;
-  color: #2C3E50;
+  color: #F6F8FA;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -63,6 +65,7 @@
 
 .result-icon {
   font-size: 20px;
+  color: #8B949E;
 }
 
 .result-details {
@@ -79,13 +82,13 @@
 
 .result-label {
   font-size: 13px;
-  color: #95A5A6;
+  color: #6E7681;
   font-weight: 600;
 }
 
 .result-value {
   font-size: 15px;
-  color: #2C3E50;
+  color: #F6F8FA;
   font-weight: 600;
 }
 

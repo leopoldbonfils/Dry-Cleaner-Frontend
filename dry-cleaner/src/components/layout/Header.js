@@ -1,3 +1,4 @@
+import ThemeToggle from '../common/ThemeToggle';
 import React from 'react';
 import './Header.css';
 
@@ -11,6 +12,7 @@ const Header = ({ title, onToggleSidebar }) => {
         <h1 className="page-title">{title}</h1>
       </div>
       <div className="header-right">
+        <ThemeToggle />
         <div className="user-avatar">A</div>
       </div>
     </header>
