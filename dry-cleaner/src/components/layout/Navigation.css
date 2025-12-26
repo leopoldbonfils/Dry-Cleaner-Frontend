@@ -127,30 +127,29 @@
   color: var(--nav-text-secondary);
 }
 
-/* Action Button (New Order) */
+/* Action Button (New Order) - UPDATED */
 .nav-action-btn {
-  box-shadow: var(--shadow-sm);
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   padding: 13px 16px;
   margin: 8px 0;
-  background: #F6F8FA;
-  background: var(--bg-quaternary);
+  background: var(--button-primary-bg); /* ✅ Use primary button color */
+  color: var(--button-primary-text); /* ✅ Contrast text */
   border: none;
   border-radius: 10px;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(246, 248, 250, 0.15);
-  position: relative;
+  box-shadow: var(--shadow-sm);
 }
 
 .nav-action-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(246, 248, 250, 0.25);
-  background: #E6E8ED;
+  box-shadow: var(--shadow-md);
+  opacity: 0.9;
 }
 
 .nav-action-btn:active {
@@ -159,11 +158,19 @@
 
 .nav-action-btn .nav-text {
   font-weight: 600;
+  color: var(--button-primary-text); /* ✅ Ensure text is visible */
+}
+
+.nav-action-btn .nav-icon {
+  color: var(--button-primary-text); /* ✅ Icon matches text */
 }
 
 .nav-sidebar.collapsed .nav-action-btn .nav-text {
   display: none;
 }
+
+
+
 
 .nav-icon {
   font-size: 20px;

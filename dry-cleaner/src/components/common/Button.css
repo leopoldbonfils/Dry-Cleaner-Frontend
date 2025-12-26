@@ -18,53 +18,56 @@
   cursor: not-allowed;
 }
 
-/* Variants */
+/* Primary Button */
 .btn-primary {
-  background: #F6F8FA;
-  color: #0D1117;
-  box-shadow: 0 4px 12px rgba(246, 248, 250, 0.15);
+  background: var(--button-primary-bg); /* ✅ Theme-aware */
+  color: var(--button-primary-text); /* ✅ Theme-aware */
+  box-shadow: var(--shadow-sm); /* ✅ Theme-aware */
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(246, 248, 250, 0.25);
-  background: #E6E8ED;
+  box-shadow: var(--shadow-md); /* ✅ Theme-aware */
+  opacity: 0.9;
 }
 
+/* Success Button */
 .btn-success {
-  background: #8B949E;
-  color: #F6F8FA;
-  box-shadow: 0 4px 12px rgba(139, 148, 158, 0.25);
+  background: var(--text-secondary); /* ✅ Gray for theme compatibility */
+  color: var(--bg-primary); /* ✅ Contrast text */
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-success:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(139, 148, 158, 0.35);
-  background: #A0AEC0;
+  box-shadow: var(--shadow-md);
+  opacity: 0.9;
 }
 
+/* Danger Button */
 .btn-danger {
-  background: #6E7681;
-  color: #F6F8FA;
-  box-shadow: 0 4px 12px rgba(110, 118, 129, 0.25);
+  background: #ef4444; /* Red - stays consistent */
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-danger:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(110, 118, 129, 0.35);
-  background: #8B949E;
+  box-shadow: var(--shadow-md);
+  background: #dc2626;
 }
 
+/* Secondary Button */
 .btn-secondary {
-  background: #21262D;
-  color: #F6F8FA;
-  border: 1px solid #30363D;
+  background: var(--button-secondary-bg); /* ✅ FIX: Was pure black */
+  color: var(--button-secondary-text); /* ✅ FIX: Theme-aware */
+  border: 1px solid var(--border-default); /* ✅ Theme-aware */
   box-shadow: none;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #30363D;
-  border-color: #444C56;
+  background: var(--bg-quaternary); /* ✅ Theme-aware hover */
+  border-color: var(--border-medium);
 }
 
 /* Sizes */

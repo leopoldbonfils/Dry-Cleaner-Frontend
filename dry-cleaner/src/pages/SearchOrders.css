@@ -14,13 +14,13 @@
 }
 
 .results-info {
-  color: #8B949E;
+  color: var(--text-secondary);
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 20px;
   padding: 12px;
-  background: #21262D;
-  border: 1px solid #30363D;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
 }
 
@@ -30,8 +30,8 @@
 }
 
 .result-card {
-  background: #161B22;
-  border: 1px solid #30363D;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
   border-radius: 14px;
   padding: 20px;
   cursor: pointer;
@@ -39,9 +39,9 @@
 }
 
 .result-card:hover {
-  border-color: #444C56;
-  background: #21262D;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border-color: var(--border-medium);
+  background: var(--bg-tertiary);
+  box-shadow: var(--shadow-sm);
   transform: translateY(-3px);
 }
 
@@ -57,7 +57,7 @@
 .result-code {
   font-size: 17px;
   font-weight: 700;
-  color: #F6F8FA;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -65,7 +65,7 @@
 
 .result-icon {
   font-size: 20px;
-  color: #8B949E;
+  color: var(--text-secondary);
 }
 
 .result-details {
@@ -82,13 +82,13 @@
 
 .result-label {
   font-size: 13px;
-  color: #6E7681;
+  color: var(--text-tertiary);
   font-weight: 600;
 }
 
 .result-value {
   font-size: 15px;
-  color: #F6F8FA;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -101,11 +101,12 @@
   font-size: 80px;
   margin-bottom: 20px;
   opacity: 0.2;
+  color: var(--text-secondary);
 }
 
 .placeholder-text {
   font-size: 16px;
-  color: #95A5A6;
+  color: var(--text-secondary);
   margin: 0;
 }
 

@@ -5,6 +5,7 @@
 }
 
 /* Theme variables (dark default). Copied from index-new.css */
+/* Dark Theme (Default) */
 :root {
   --bg-primary: #0D1117;
   --bg-secondary: #161B22;
@@ -23,13 +24,15 @@
   --button-primary-text: #0D1117;
   --button-secondary-bg: #21262D;
   --button-secondary-text: #F6F8FA;
+  --accent-primary: #3b82f6; /* Blue */
+  --accent-primary-hover: #2563eb;
+  --accent-text: #FFFFFF;
 
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.6);
 }
 
-/* Light theme variables */
+/* Light Theme */
 html[data-theme='light'],
 html.light-theme {
   --bg-primary: #FFFFFF;
@@ -49,10 +52,12 @@ html.light-theme {
   --button-primary-text: #FFFFFF;
   --button-secondary-bg: #F1F5F9;
   --button-secondary-text: #1E293B;
+  --accent-primary: #3b82f6; /* Blue */
+  --accent-primary-hover: #2563eb;
+  --accent-text: #FFFFFF;
 
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.15);
 }
 
 body {

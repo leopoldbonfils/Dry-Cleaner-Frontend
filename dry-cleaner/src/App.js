@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify'; // ✅ Import
+import 'react-toastify/dist/ReactToastify.css'; // ✅ Import CSS
 import Navigation from './components/layout/Navigation';
 import Header from './components/layout/Header';
 import Dashboard from './components/dashboard/Dashboard';
@@ -7,6 +9,8 @@ import SearchOrders from './pages/SearchOrders';
 import NewOrder from './pages/NewOrder';
 import OrderDetails from './pages/OrderDetails';
 import { ordersAPI, healthCheck } from './components/services/api';
+import 'react-toastify/dist/ReactToastify.css';
+import './styles/toast-custom.css';
 import './App.css';
 
 function App() {
@@ -24,13 +28,10 @@ function App() {
     unpaidAmount: 0
   });
 
-  // Check backend connection and fetch initial data
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     initializeApp();
   }, []);
 
-  // Initialize theme on app load
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -52,19 +53,20 @@ function App() {
     try {
       setLoading(true);
       
-      // Check if backend is running
       console.log('🔍 Checking backend connection...');
       await healthCheck();
       console.log('✅ Backend connected successfully!');
       setBackendConnected(true);
       
-      // Fetch initial data
       await Promise.all([fetchOrders(), fetchStats()]);
       
     } catch (error) {
       console.error('❌ Backend connection failed:', error.message);
       setBackendConnected(false);
-      alert('Unable to connect to backend server. Please ensure:\n1. Backend server is running on http://localhost:5000\n2. MySQL database is running\n3. Check the console for detailed errors');
+      toast.error('Unable to connect to backend server', { // ✅ Toast instead of alert
+        position: "top-right",
+        autoClose: 5000,
+      });
     } finally {
       setLoading(false);
     }
@@ -104,16 +106,20 @@ function App() {
       const newOrder = await ordersAPI.create(orderData);
       console.log('✅ Order created:', newOrder);
       
-      // Refresh data
       await Promise.all([fetchOrders(), fetchStats()]);
       
-      // Navigate to orders list
       setCurrentView('orders');
       
-      alert('Order created successfully! ✅');
+      toast.success('Order created successfully! ✅', { // ✅ Toast notification
+        position: "top-right",
+        autoClose: 3000,
+      });
     } catch (error) {
       console.error('❌ Failed to create order:', error);
-      alert(`Failed to create order: ${error.message}`);
+      toast.error(`Failed to create order: ${error.message}`, { // ✅ Toast error
+        position: "top-right",
+        autoClose: 5000,
+      });
     }
   };
 
@@ -220,6 +226,20 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* ✅ Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      
       <Navigation
         currentView={currentView}
         onNavigate={handleNavigate}

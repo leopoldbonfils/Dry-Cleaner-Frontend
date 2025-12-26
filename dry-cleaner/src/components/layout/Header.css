@@ -1,14 +1,15 @@
 .header {
-  background: #161B22;
+  background: var(--bg-secondary);
   padding: 20px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid #30363D;
+  border-bottom: 1px solid var(--border-default);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .header-left {
@@ -18,8 +19,8 @@
 }
 
 .toggle-btn {
-  background: #21262D;
-  border: 1px solid #30363D;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
   width: 40px;
   height: 40px;
   border-radius: 10px;
@@ -29,19 +30,19 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  color: #8B949E;
+  color: var(--text-secondary);
 }
 
 .toggle-btn:hover {
-  background: #30363D;
-  border-color: #444C56;
-  color: #F6F8FA;
+  background: var(--bg-quaternary);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
 }
 
 .page-title {
   font-size: 26px;
   font-weight: 700;
-  color: #F6F8FA;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -54,20 +55,22 @@
 .user-avatar {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #8B949E 0%, #6E7681 100%);
+  background: var(--bg-quaternary);
+  border: 2px solid var(--border-default);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #F6F8FA;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .user-avatar:hover {
   transform: scale(1.1);
+  border-color: var(--border-medium);
 }
 
 /* Mobile responsive */

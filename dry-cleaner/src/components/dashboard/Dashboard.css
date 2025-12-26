@@ -15,8 +15,8 @@
 }
 
 .order-item {
-  background: #161B22;
-  border: 1px solid #30363D;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
   border-radius: 12px;
   padding: 18px;
   cursor: pointer;
@@ -24,9 +24,9 @@
 }
 
 .order-item:hover {
-  border-color: #444C56;
-  background: #21262D;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-color: var(--border-medium);
+  background: var(--bg-tertiary);
+  box-shadow: var(--shadow-sm);
   transform: translateY(-2px);
 }
 
@@ -40,7 +40,7 @@
 .order-code {
   font-size: 16px;
   font-weight: 700;
-  color: #F6F8FA;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -48,7 +48,7 @@
 
 .order-icon {
   font-size: 18px;
-  color: #8B949E;
+  color: var(--text-secondary);
 }
 
 .order-info {
@@ -65,12 +65,12 @@
 
 .info-icon {
   font-size: 16px;
-  color: #8B949E;
+  color: var(--text-secondary);
 }
 
 .info-text {
   font-size: 14px;
-  color: #8B949E;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 

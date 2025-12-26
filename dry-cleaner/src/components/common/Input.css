@@ -6,12 +6,12 @@
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #8B949E;
+  color: var(--text-secondary); /* ✅ Theme-aware */
   margin-bottom: 8px;
 }
 
 .required {
-  color: #A0AEC0;
+  color: var(--text-secondary); /* ✅ Changed */
   margin-left: 4px;
 }
 
@@ -22,38 +22,38 @@
 .input-field {
   width: 100%;
   padding: 13px 18px;
-  border: 1px solid #30363D;
+  border: 1px solid var(--border-default); /* ✅ Theme-aware */
   border-radius: 10px;
   font-size: 15px;
   font-family: inherit;
   transition: all 0.2s ease;
-  background: #0D1117;
-  color: #F6F8FA;
+  background: var(--bg-secondary); /* ✅ FIX: Was #000 or hardcoded */
+  color: var(--text-primary); /* ✅ FIX: Theme-aware text */
 }
 
 .input-field::placeholder {
-  color: #6E7681;
+  color: var(--text-tertiary); /* ✅ Theme-aware placeholder */
 }
 
 .input-field:focus {
   outline: none;
-  border-color: #444C56;
-  box-shadow: 0 0 0 3px rgba(68, 76, 86, 0.1);
+  border-color: var(--border-medium); /* ✅ Theme-aware */
+  box-shadow: 0 0 0 3px var(--bg-quaternary); /* ✅ Theme-aware */
 }
 
 .input-field:hover:not(:disabled) {
-  border-color: #444C56;
+  border-color: var(--border-medium); /* ✅ Theme-aware */
 }
 
 .input-field:disabled {
-  background: #161B22;
+  background: var(--bg-tertiary); /* ✅ Theme-aware */
   cursor: not-allowed;
-  color: #6E7681;
+  color: var(--text-tertiary); /* ✅ Theme-aware */
   opacity: 0.6;
 }
 
 .input-field.error {
-  border-color: #A0AEC0;
+  border-color: #ef4444; /* Error red - can stay */
 }
 
 .input-field.with-icon {
@@ -66,12 +66,12 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 18px;
-  color: #8B949E;
+  color: var(--text-secondary); /* ✅ Theme-aware */
 }
 
 .input-error {
   display: block;
-  color: #A0AEC0;
+  color: #ef4444; /* Error red - can stay */
   font-size: 13px;
   margin-top: 5px;
 }
@@ -85,6 +85,14 @@
   background-position: right 15px center;
   background-size: 16px;
   padding-right: 45px;
+  background-color: var(--bg-secondary); /* ✅ FIX: Added explicit background */
+  color: var(--text-primary); /* ✅ FIX: Theme-aware text */
+}
+
+/* Light theme - update arrow color */
+html[data-theme='light'] .select-field,
+html.light-theme .select-field {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
 }
 
 /* Mobile responsive */

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify'; // ✅ Import toast
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Input, { Select } from '../components/common/Input';
@@ -31,18 +32,53 @@ const NewOrder = ({ onSubmit, onCancel }) => {
         price: currentPrice
       }]);
       setCurrentQty(1);
+      
+      // ✅ Toast notification
+      toast.success(`${typeLabel} added successfully!`, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+      });
+    } else {
+      // ✅ Toast error
+      toast.error('Quantity and price must be greater than 0', {
+        position: "top-center",
+        autoClose: 3000,
+      });
     }
   };
 
   const handleRemoveItem = (index) => {
+    const removedItem = items[index];
     setItems(items.filter((_, i) => i !== index));
+    
+    // ✅ Toast notification
+    toast.info(`${removedItem.type} removed`, {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+    });
   };
 
   const totalAmount = calculateTotal(items);
 
   const handleSubmit = () => {
+    // ✅ Validation with toast
     if (!clientName || !clientPhone || items.length === 0) {
-      alert('Please fill all required fields and add at least one item');
+      toast.warning('Please fill all required fields and add at least one item', {
+        position: "top-center",
+        autoClose: 4000,
+      });
+      return;
+    }
+
+    // ✅ Phone validation
+    const phoneRegex = /^07[2-9]\d{7}$/;
+    if (!phoneRegex.test(clientPhone)) {
+      toast.error('Invalid phone number! Use format: 078XXXXXXX', {
+        position: "top-center",
+        autoClose: 4000,
+      });
       return;
     }
 
@@ -174,7 +210,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
         <Button variant="success" icon="✅" onClick={handleSubmit} fullWidth>
           Create Order
         </Button>
-        <Button variant="secondary" icon="❌" onClick={onCancel}>
+        <Button variant="secondary" icon="✖" onClick={onCancel}>
           Cancel
         </Button>
       </div>

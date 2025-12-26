@@ -1,3 +1,29 @@
+/* Filter buttons - override Button.css if needed */
+.filter-buttons .btn {
+  background: var(--bg-tertiary); /* ✅ Theme-aware */
+  color: var(--text-primary); /* ✅ Theme-aware */
+  border: 1px solid var(--border-default);
+  transition: all 0.2s ease;
+}
+
+.filter-buttons .btn:hover {
+  background: var(--bg-quaternary);
+  border-color: var(--border-medium);
+  transform: translateY(-1px);
+}
+
+.filter-buttons .btn-primary {
+  background: var(--button-primary-bg); /* ✅ Active filter */
+  color: var(--button-primary-text);
+  border-color: var(--button-primary-bg);
+}
+
+.filter-buttons .btn-secondary {
+  background: var(--bg-tertiary); /* ✅ Inactive filter */
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+}
+
 .orders-list {
   animation: fadeIn 0.3s ease;
 }
@@ -18,8 +44,8 @@
 }
 
 .order-card {
-  background: #161B22;
-  border: 1px solid #30363D;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
   border-radius: 14px;
   padding: 22px;
   transition: all 0.2s ease;
@@ -27,9 +53,9 @@
 }
 
 .order-card:hover {
-  border-color: #444C56;
-  background: #21262D;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border-color: var(--border-medium);
+  background: var(--bg-tertiary);
+  box-shadow: var(--shadow-sm);
   transform: translateY(-3px);
 }
 
@@ -45,7 +71,7 @@
 .order-code {
   font-size: 17px;
   font-weight: 700;
-  color: #F6F8FA;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -53,7 +79,7 @@
 
 .order-icon {
   font-size: 20px;
-  color: #8B949E;
+  color: var(--text-secondary);
 }
 
 .order-details {
@@ -70,12 +96,12 @@
 
 .detail-icon {
   font-size: 20px;
-  color: #8B949E;
+  color: var(--text-secondary);
 }
 
 .detail-label {
   font-size: 12px;
-  color: #6E7681;
+  color: var(--text-tertiary);
   margin-bottom: 4px;
   font-weight: 600;
   text-transform: uppercase;
@@ -84,7 +110,7 @@
 
 .detail-value {
   font-size: 15px;
-  color: #F6F8FA;
+  color: var(--text-primary);
   font-weight: 600;
 }
 

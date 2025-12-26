@@ -1,5 +1,5 @@
-import ThemeToggle from '../common/ThemeToggle';
 import React from 'react';
+import ThemeToggle from '../common/ThemeToggle';
 import './Header.css';
 
 const Header = ({ title, onToggleSidebar }) => {
