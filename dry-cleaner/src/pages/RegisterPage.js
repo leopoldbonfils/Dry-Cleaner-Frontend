@@ -1,8 +1,10 @@
-// src/pages/RegisterPage.js
-import React, { useState } from 'react';
+// src/pages/RegisterPage.js (Updated with Slideshow)
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ThemeToggle from '../components/common/ThemeToggle';
+import ImageSlideshow from '../components/common/ImageSlideshow';
+import { SLIDESHOW_IMAGES, preloadSlideshowImages } from '../config/slideshowImages';
 import './AuthPages.css';
 
 const RegisterPage = () => {
@@ -18,6 +20,11 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
+  // Preload images
+  useEffect(() => {
+    preloadSlideshowImages();
+  }, []);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -28,42 +35,24 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validation
     if (!formData.fullName || !formData.email || !formData.password) {
-      toast.warning('Please fill in all required fields', {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      toast.warning('Please fill in all required fields');
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match', {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      toast.error('Passwords do not match');
       return;
     }
 
     if (!agreedToTerms) {
-      toast.warning('Please agree to the terms and conditions', {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      toast.warning('Please agree to the terms and conditions');
       return;
     }
 
     setLoading(true);
-
-    // TODO: Replace with actual API call
     setTimeout(() => {
-      console.log('Registration attempt:', formData);
-      toast.success('Account created successfully! 🎉', {
-        position: "top-right",
-        autoClose: 2000,
-      });
-      
-      // Redirect to dashboard or login
+      toast.success('Account created successfully! 🎉');
       navigate('/dashboard');
       setLoading(false);
     }, 1500);
@@ -72,43 +61,38 @@ const RegisterPage = () => {
   return (
     <div className="auth-page">
       <div className="auth-container register-container">
-        {/* Left Side - Branding */}
-        <div className="auth-branding">
-          <div className="branding-content">
-            <div className="brand-logo">
-              <span className="logo-icon">🧺</span>
-              <span className="logo-text">CleanPro</span>
+        {/* Left Side - Slideshow */}
+        <div className="auth-branding auth-slideshow-section">
+          <ImageSlideshow
+            images={SLIDESHOW_IMAGES.register}
+            interval={4000}
+            transition="fade"
+            showCaptions={true}
+            showIndicators={true}
+            className="auth-slideshow"
+          />
+          
+          <div className="auth-branding-overlay">
+            <div className="branding-content">
+              <div className="brand-logo">
+                <span className="logo-icon">🧺</span>
+                <span className="logo-text">CleanPro</span>
+              </div>
+              <h1 className="branding-title">Start Your Journey</h1>
+              <p className="branding-description">
+                Create your account and start managing your dry cleaning business efficiently
+              </p>
             </div>
-            <h1 className="branding-title">Start Your Journey</h1>
-            <p className="branding-description">
-              Create your account and start managing your dry cleaning business efficiently
-            </p>
-            <div className="branding-features">
-              <div className="feature-item">
-                <span className="feature-icon">✓</span>
-                <span>Free 30-day trial</span>
-              </div>
-              <div className="feature-item">
-                <span className="feature-icon">✓</span>
-                <span>No credit card required</span>
-              </div>
-              <div className="feature-item">
-                <span className="feature-icon">✓</span>
-                <span>Full feature access</span>
-              </div>
+            
+            <div className="branding-footer">
+              <button className="back-to-home" onClick={() => navigate('/')}>
+                 Back to Home
+              </button>
             </div>
-          </div>
-          <div className="branding-footer">
-            <button 
-              className="back-to-home"
-              onClick={() => navigate('/')}
-            >
-              ← Back to Home
-            </button>
           </div>
         </div>
 
-        {/* Right Side - Register Form */}
+        {/* Right Side - Form */}
         <div className="auth-form-container">
           <div className="theme-toggle-wrapper">
             <ThemeToggle />
@@ -127,7 +111,7 @@ const RegisterPage = () => {
                   id="fullName"
                   name="fullName"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Enter your full name"
                   value={formData.fullName}
                   onChange={handleChange}
                   required
@@ -140,7 +124,7 @@ const RegisterPage = () => {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email address"
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -153,7 +137,7 @@ const RegisterPage = () => {
                   id="phone"
                   name="phone"
                   type="tel"
-                  placeholder="078XXXXXXX"
+                  placeholder="Enter your phone number"
                   value={formData.phone}
                   onChange={handleChange}
                 />
@@ -165,7 +149,7 @@ const RegisterPage = () => {
                   id="businessName"
                   name="businessName"
                   type="text"
-                  placeholder="Your Business Name"
+                  placeholder="Enter your business name"
                   value={formData.businessName}
                   onChange={handleChange}
                 />
@@ -177,7 +161,7 @@ const RegisterPage = () => {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
                   required
@@ -190,7 +174,7 @@ const RegisterPage = () => {
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
@@ -208,11 +192,7 @@ const RegisterPage = () => {
                 </label>
               </div>
 
-              <button 
-                type="submit" 
-                className="auth-submit-btn"
-                disabled={loading}
-              >
+              <button type="submit" className="auth-submit-btn" disabled={loading}>
                 {loading ? (
                   <>
                     <span className="spinner"></span>
@@ -230,10 +210,7 @@ const RegisterPage = () => {
             <div className="auth-footer">
               <p>
                 Already have an account?{' '}
-                <button 
-                  className="auth-link"
-                  onClick={() => navigate('/login')}
-                >
+                <button className="auth-link" onClick={() => navigate('/login')}>
                   Sign in
                 </button>
               </p>

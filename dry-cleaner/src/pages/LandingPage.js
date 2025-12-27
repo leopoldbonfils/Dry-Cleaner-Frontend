@@ -1,45 +1,57 @@
-import React from 'react';
+// src/pages/LandingPage.js (COMPLETE REDESIGN)
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/common/ThemeToggle';
+import ImageSlideshow from '../components/common/ImageSlideshow';
+import { SLIDESHOW_IMAGES, preloadSlideshowImages } from '../config/slideshowImages';
 import './LandingPage.css';
-
-// Import your actual screenshots here
-// import registerPreview from '../assets/screenshots/register-preview.png';
-// import loginPreview from '../assets/screenshots/login-preview.png';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    preloadSlideshowImages();
+    
+    // Handle scroll for nav background
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const features = [
     {
       icon: '📦',
       title: 'Order Management',
-      description: 'Create, track, and manage all dry cleaning orders in one centralized system.'
+      description: 'Create, track, and manage all dry cleaning orders in one centralized system with real-time updates and status tracking.'
     },
     {
       icon: '👥',
       title: 'Customer Tracking',
-      description: 'Keep detailed records of customer information and order history.'
+      description: 'Keep detailed records of customer information, preferences, and complete order history for personalized service.'
     },
     {
       icon: '💳',
       title: 'Payment & Status',
-      description: 'Track payment methods, status, and order progress in real-time.'
+      description: 'Track payment methods, status, and order progress with automated notifications and payment reminders.'
     },
     {
       icon: '📊',
       title: 'Dashboard & Reports',
-      description: 'Get insights with comprehensive analytics and reporting tools.'
+      description: 'Get insights with comprehensive analytics, revenue reports, and business metrics at your fingertips.'
     },
     {
       icon: '🔔',
-      title: 'Order Notifications',
-      description: 'Stay updated with automatic notifications for order status changes.'
+      title: 'Smart Notifications',
+      description: 'Stay updated with automatic notifications for order status changes, payments, and important updates.'
     },
     {
       icon: '🔍',
       title: 'Quick Search',
-      description: 'Find orders instantly by code, phone number, or customer name.'
+      description: 'Find orders instantly by code, phone number, or customer name with advanced filters and sorting.'
     }
   ];
 
@@ -47,142 +59,154 @@ const LandingPage = () => {
     {
       number: '01',
       title: 'Register Account',
-      description: 'Create your CleanPro account in seconds with just basic information.'
+      description: 'Create your CleanPro account in seconds with just basic information. No credit card required.',
+      icon: '✍️'
     },
     {
       number: '02',
       title: 'Login to System',
-      description: 'Access your personalized dashboard with secure authentication.'
+      description: 'Access your personalized dashboard with secure authentication and start managing orders.',
+      icon: '🔐'
     },
     {
       number: '03',
       title: 'Manage Orders',
-      description: 'Create new orders, add items, set prices, and track everything.'
+      description: 'Create new orders, add items, set prices, and track everything from one central dashboard.',
+      icon: '📋'
     },
     {
       number: '04',
       title: 'Track & Complete',
-      description: 'Monitor order status, payments, and mark orders as complete.'
+      description: 'Monitor order status, payments, and mark orders as complete with automated customer notifications.',
+      icon: '✅'
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: 'Jean Marie Nkurunziza',
+      role: 'Owner, Fresh Clean Laundry',
+      avatar: '👨‍💼',
+      rating: 5,
+      text: 'CleanPro has completely transformed how we manage our dry cleaning business. Order tracking is now seamless, efficient, and our customers absolutely love the transparency!'
+    },
+    {
+      name: 'Alice Uwase',
+      role: 'Manager, Sparkle Dry Cleaners',
+      avatar: '👩‍💼',
+      rating: 5,
+      text: 'The payment tracking and customer management features are outstanding. We\'ve reduced errors by 80% and saved countless hours since switching to CleanPro.'
+    },
+    {
+      name: 'Patrick Mugabo',
+      role: 'Owner, Prime Laundry Services',
+      avatar: '👨‍💼',
+      rating: 5,
+      text: 'Best investment for our business! The dashboard gives us real-time insights and helps us make better decisions daily. Customer service is also excellent!'
+    }
+  ];
+
+  const faqs = [
+    {
+      question: 'How do I get started with CleanPro?',
+      answer: 'Simply click the "Get Started" button, create your free account, and you\'ll be up and running in less than 5 minutes. No credit card required for the free plan.'
+    },
+    {
+      question: 'Is my data secure?',
+      answer: 'Absolutely. We use bank-level encryption and security measures to protect your data. All information is backed up daily and stored securely in compliance with data protection regulations.'
+    },
+    {
+      question: 'Do you offer customer support?',
+      answer: 'Yes! We offer email support for all users, and priority support for Professional and Enterprise plans. Our team typically responds within 24 hours, often much faster.'
+    },
+    {
+      question: 'Can I import my existing customer data?',
+      answer: 'Yes, we provide tools to import your existing customer and order data from CSV files or other systems. Our support team can help with the migration process to ensure a smooth transition.'
+    },
+    {
+      question: 'Is there a mobile app?',
+      answer: 'CleanPro is fully responsive and works great on mobile browsers. Native iOS and Android apps are coming soon! You\'ll be notified when they launch.'
+    },
+    {
+      question: 'What payment methods do you accept?',
+      answer: 'We accept all major credit cards, debit cards, and mobile payment methods. You can manage your subscription easily from your account dashboard at any time.'
     }
   ];
 
   return (
     <div className="landing-page">
       {/* Navigation */}
-      <nav className="landing-nav">
+      <nav className={`landing-nav ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
-          <div className="nav-logo">
+          <div className="nav-logo" onClick={() => navigate('/')}>
             <span className="logo-icon">🧺</span>
             <span className="logo-text">CleanPro</span>
           </div>
           <div className="nav-actions">
             <ThemeToggle />
-            <button 
-              className="btn-ghost"
-              onClick={() => navigate('/login')}
-            >
+            <button className="btn-ghost" onClick={() => navigate('/login')}>
               Login
             </button>
-            <button 
-              className="btn-primary"
-              onClick={() => navigate('/register')}
-            >
+            <button className="btn-primary" onClick={() => navigate('/register')}>
               Get Started
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-container">
-          <div className="hero-badge">
-            <span className="badge-icon">✨</span>
-            <span>Modern Dry Cleaning Management</span>
+      {/* Hero Section with Slideshow */}
+      <section className="hero-section-slideshow">
+        <div className="hero-slideshow-container">
+          <div className="hero-slideshow-wrapper">
+            <ImageSlideshow
+              images={SLIDESHOW_IMAGES.landing}
+              interval={5000}
+              transition="fade"
+              showCaptions={false}
+              showIndicators={true}
+              className="hero-slideshow"
+            />
+            <div className="hero-slideshow-overlay"></div>
           </div>
-          <h1 className="hero-title">
-            Smart Management for<br />
-            Modern Dry Cleaning
-          </h1>
-          <p className="hero-description">
-            Streamline your dry cleaning business with CleanPro - the all-in-one
-            platform for order management, customer tracking, and business insights.
-          </p>
-          <div className="hero-cta">
-            <button 
-              className="btn-hero-primary"
-              onClick={() => navigate('/register')}
-            >
-              <span className="btn-icon">🚀</span>
-              Start Free Trial
-            </button>
-            <button 
-              className="btn-hero-secondary"
-              onClick={() => navigate('/login')}
-            >
-              Sign In
-            </button>
-          </div>
-          <div className="hero-stats">
-            <div className="stat-item">
-              <div className="stat-number">500+</div>
-              <div className="stat-label">Active Users</div>
-            </div>
-            <div className="stat-divider"></div>
-            <div className="stat-item">
-              <div className="stat-number">10K+</div>
-              <div className="stat-label">Orders Managed</div>
-            </div>
-            <div className="stat-divider"></div>
-            <div className="stat-item">
-              <div className="stat-number">99.9%</div>
-              <div className="stat-label">Uptime</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* System Overview */}
-      <section className="overview-section">
-        <div className="section-container">
-          <div className="section-header">
-            <span className="section-badge">Why CleanPro?</span>
-            <h2 className="section-title">Built for Dry Cleaning Businesses</h2>
-            <p className="section-description">
-              CleanPro is designed specifically for dry cleaning shops, laundromats,
-              and textile care services who want to modernize their operations.
-            </p>
-          </div>
-          <div className="overview-grid">
-            <div className="overview-card">
-              <div className="overview-icon">🎯</div>
-              <h3>Who It's For</h3>
-              <ul className="overview-list">
-                <li>Dry cleaning shop owners</li>
-                <li>Laundromat managers</li>
-                <li>Textile care services</li>
-                <li>Multi-location chains</li>
-              </ul>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">⚡</div>
-              <h3>What It Does</h3>
-              <ul className="overview-list">
-                <li>Manages customer orders</li>
-                <li>Tracks order status</li>
-                <li>Processes payments</li>
-                <li>Generates business reports</li>
-              </ul>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">💡</div>
-              <h3>Why Choose Us</h3>
-              <ul className="overview-list">
-                <li>Easy to use interface</li>
-                <li>Real-time updates</li>
-                <li>Secure & reliable</li>
-                <li>Affordable pricing</li>
-              </ul>
+          <div className="hero-content-overlay">
+            <div className="hero-content-wrapper">
+              <div className="hero-badge">
+                <span className="badge-icon">✨</span>
+                <span>Modern Dry Cleaning Management</span>
+              </div>
+              <h1 className="hero-title">
+                Smart Management for<br />
+                Modern Dry Cleaning
+              </h1>
+              <p className="hero-description">
+                Streamline your dry cleaning business with CleanPro - the all-in-one
+                platform for order management, customer tracking, and business insights.
+              </p>
+              <div className="hero-cta">
+                <button className="btn-hero-primary" onClick={() => navigate('/register')}>
+                  <span className="btn-icon">🚀</span>
+                  <span>Start Free Trial</span>
+                </button>
+                <button className="btn-hero-secondary" onClick={() => navigate('/login')}>
+                  <span>Sign In</span>
+                </button>
+              </div>
+
+              <div className="hero-stats">
+                <div className="stat-item">
+                  <div className="stat-number">500+</div>
+                  <div className="stat-label">Active Users</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-number">10K+</div>
+                  <div className="stat-label">Orders Managed</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-number">99.9%</div>
+                  <div className="stat-label">Uptime</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -196,6 +220,7 @@ const LandingPage = () => {
             <h2 className="section-title">Everything You Need to Succeed</h2>
             <p className="section-description">
               Powerful features designed to streamline your dry cleaning operations
+              and help you deliver exceptional customer service.
             </p>
           </div>
           <div className="features-grid">
@@ -210,175 +235,104 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Authentication Preview Section - EMPHASIZED */}
-      <section className="auth-preview-section">
-        <div className="section-container">
-          <div className="section-header">
-            <span className="section-badge">Get Started</span>
-            <h2 className="section-title">Simple & Secure Authentication</h2>
-            <p className="section-description">
-              Join thousands of businesses managing their operations with CleanPro
-            </p>
-          </div>
-          
-          <div className="auth-preview-grid">
-            {/* Register Preview */}
-            <div className="auth-preview-card register-card">
-              <div className="auth-preview-header">
-                <div className="auth-badge">
-                  <span className="badge-icon">✨</span>
-                  New User
-                </div>
-                <h3>Create Your Account</h3>
-                <p>Get started in less than 60 seconds</p>
-              </div>
-              
-              <div className="auth-preview-image-wrapper">
-                <div className="auth-preview-image">
-                  {/* Replace this div with your actual screenshot */}
-                  {/* <img src={registerPreview} alt="Register Page" /> */}
-                  <div className="image-placeholder register-placeholder">
-                    <div className="placeholder-content">
-                      <span className="placeholder-icon">🖼️</span>
-                      <p>Register Page Screenshot</p>
-                      <small>Replace with actual screenshot</small>
-                    </div>
-                  </div>
-                </div>
-                <div className="auth-preview-overlay">
-                  <div className="overlay-badge">
-                    <span>🔒</span> Secure Registration
-                  </div>
-                </div>
-              </div>
-              
-              <div className="auth-preview-features">
-                <div className="preview-feature">
-                  <span className="check-icon">✓</span>
-                  <span>Quick setup process</span>
-                </div>
-                <div className="preview-feature">
-                  <span className="check-icon">✓</span>
-                  <span>No credit card required</span>
-                </div>
-                <div className="preview-feature">
-                  <span className="check-icon">✓</span>
-                  <span>Instant access</span>
-                </div>
-              </div>
-              
-              <button 
-                className="auth-preview-btn btn-register"
-                onClick={() => navigate('/register')}
-              >
-                <span className="btn-icon">🚀</span>
-                Create Account
-              </button>
-            </div>
-
-            {/* Login Preview */}
-            <div className="auth-preview-card login-card">
-              <div className="auth-preview-header">
-                <div className="auth-badge">
-                  <span className="badge-icon">👋</span>
-                  Welcome Back
-                </div>
-                <h3>Login to Dashboard</h3>
-                <p>Access your personalized workspace</p>
-              </div>
-              
-              <div className="auth-preview-image-wrapper">
-                <div className="auth-preview-image">
-                  {/* Replace this div with your actual screenshot */}
-                  {/* <img src={loginPreview} alt="Login Page" /> */}
-                  <div className="image-placeholder login-placeholder">
-                    <div className="placeholder-content">
-                      <span className="placeholder-icon">🖼️</span>
-                      <p>Login Page Screenshot</p>
-                      <small>Replace with actual screenshot</small>
-                    </div>
-                  </div>
-                </div>
-                <div className="auth-preview-overlay">
-                  <div className="overlay-badge">
-                    <span>🛡️</span> Secure Login
-                  </div>
-                </div>
-              </div>
-              
-              <div className="auth-preview-features">
-                <div className="preview-feature">
-                  <span className="check-icon">✓</span>
-                  <span>Secure authentication</span>
-                </div>
-                <div className="preview-feature">
-                  <span className="check-icon">✓</span>
-                  <span>Remember me option</span>
-                </div>
-                <div className="preview-feature">
-                  <span className="check-icon">✓</span>
-                  <span>Password recovery</span>
-                </div>
-              </div>
-              
-              <button 
-                className="auth-preview-btn btn-login"
-                onClick={() => navigate('/login')}
-              >
-                <span className="btn-icon">🔓</span>
-                Sign In
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
+      {/* How It Works Section */}
       <section className="steps-section">
         <div className="section-container">
           <div className="section-header">
             <span className="section-badge">How It Works</span>
             <h2 className="section-title">Get Started in 4 Simple Steps</h2>
             <p className="section-description">
-              Start managing your dry cleaning business efficiently in minutes
+              Start managing your dry cleaning business efficiently in minutes.
+              No technical knowledge required.
             </p>
           </div>
           <div className="steps-grid">
             {steps.map((step, index) => (
               <div key={index} className="step-card">
                 <div className="step-number">{step.number}</div>
+                <div className="step-icon">{step.icon}</div>
                 <h3 className="step-title">{step.title}</h3>
                 <p className="step-description">{step.description}</p>
-                {index < steps.length - 1 && (
-                  <div className="step-arrow">→</div>
-                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* Testimonials Section */}
+      <section className="testimonials-section">
+        <div className="section-container">
+          <div className="section-header">
+            <span className="section-badge">Testimonials</span>
+            <h2 className="section-title">Loved by Businesses Worldwide</h2>
+            <p className="section-description">
+              See what our customers have to say about CleanPro and how it
+              transformed their business operations.
+            </p>
+          </div>
+          <div className="testimonials-grid">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="testimonial-card">
+                <div className="testimonial-rating">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <span key={i} className="star">⭐</span>
+                  ))}
+                </div>
+                <p className="testimonial-text">"{testimonial.text}"</p>
+                <div className="testimonial-author">
+                  <div className="author-avatar">{testimonial.avatar}</div>
+                  <div className="author-info">
+                    <div className="author-name">{testimonial.name}</div>
+                    <div className="author-role">{testimonial.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="faq-section">
+        <div className="section-container">
+          <div className="section-header">
+            <span className="section-badge">FAQ</span>
+            <h2 className="section-title">Frequently Asked Questions</h2>
+            <p className="section-description">
+              Everything you need to know about CleanPro. Can't find the answer
+              you're looking for? Contact our support team.
+            </p>
+          </div>
+          <div className="faq-grid">
+            {faqs.map((faq, index) => (
+              <div key={index} className="faq-item">
+                <h3 className="faq-question">
+                  <span className="faq-icon">❓</span>
+                  <span>{faq.question}</span>
+                </h3>
+                <p className="faq-answer">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
       <section className="cta-section">
         <div className="cta-container">
           <div className="cta-content">
             <h2 className="cta-title">Ready to Transform Your Business?</h2>
             <p className="cta-description">
-              Join hundreds of dry cleaning businesses already using CleanPro
+              Join hundreds of dry cleaning businesses already using CleanPro to
+              streamline operations and boost customer satisfaction.
             </p>
             <div className="cta-buttons">
-              <button 
-                className="btn-cta-primary"
-                onClick={() => navigate('/register')}
-              >
+              <button className="btn-cta-primary" onClick={() => navigate('/register')}>
                 <span className="btn-icon">🚀</span>
-                Get Started Free
+                <span>Get Started Free</span>
               </button>
-              <button 
-                className="btn-cta-secondary"
-                onClick={() => navigate('/login')}
-              >
-                Sign In
+              <button className="btn-cta-secondary" onClick={() => navigate('/login')}>
+                <span>Sign In</span>
               </button>
             </div>
           </div>
@@ -396,30 +350,53 @@ const LandingPage = () => {
             <p className="footer-tagline">
               Smart Management for Modern Dry Cleaning
             </p>
+            <div className="footer-social">
+              <a href="#facebook" className="social-link" aria-label="Facebook">📘</a>
+              <a href="#twitter" className="social-link" aria-label="Twitter">🐦</a>
+              <a href="#instagram" className="social-link" aria-label="Instagram">📷</a>
+              <a href="#linkedin" className="social-link" aria-label="LinkedIn">💼</a>
+            </div>
           </div>
+          
           <div className="footer-links">
             <div className="footer-column">
               <h4>Product</h4>
               <a href="#features">Features</a>
-              <a href="#pricing">Pricing</a>
-              <a href="#updates">Updates</a>
+              <a href="#how-it-works">How It Works</a>
+              <a href="#testimonials">Testimonials</a>
+              <a href="#faq">FAQ</a>
             </div>
             <div className="footer-column">
               <h4>Company</h4>
-              <a href="#about">About</a>
+              <a href="#about">About Us</a>
               <a href="#contact">Contact</a>
               <a href="#careers">Careers</a>
+              <a href="#blog">Blog</a>
             </div>
             <div className="footer-column">
               <h4>Support</h4>
               <a href="#help">Help Center</a>
               <a href="#docs">Documentation</a>
               <a href="#api">API</a>
+              <a href="#status">Status</a>
+            </div>
+            <div className="footer-column">
+              <h4>Legal</h4>
+              <a href="#privacy">Privacy Policy</a>
+              <a href="#terms">Terms of Service</a>
+              <a href="#security">Security</a>
+              <a href="#gdpr">GDPR</a>
             </div>
           </div>
         </div>
+        
         <div className="footer-bottom">
           <p>&copy; 2024 CleanPro. All rights reserved.</p>
+          <div className="footer-bottom-links">
+            <a href="#privacy">Privacy</a>
+            <a href="#terms">Terms</a>
+            <a href="#cookies">Cookies</a>
+          </div>
         </div>
       </footer>
     </div>

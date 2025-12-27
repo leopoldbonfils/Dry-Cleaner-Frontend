@@ -1,8 +1,10 @@
-// src/pages/LoginPage.js
-import React, { useState } from 'react';
+// src/pages/LoginPage.js (Updated with Slideshow)
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ThemeToggle from '../components/common/ThemeToggle';
+import ImageSlideshow from '../components/common/ImageSlideshow';
+import { SLIDESHOW_IMAGES, preloadSlideshowImages } from '../config/slideshowImages';
 import './AuthPages.css';
 
 const LoginPage = () => {
@@ -12,28 +14,22 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Preload images
+  useEffect(() => {
+    preloadSlideshowImages();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!email || !password) {
-      toast.warning('Please fill in all fields', {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      toast.warning('Please fill in all fields');
       return;
     }
 
     setLoading(true);
-
-    // TODO: Replace with actual API call
     setTimeout(() => {
-      console.log('Login attempt:', { email, rememberMe });
-      toast.success('Login successful! 🎉', {
-        position: "top-right",
-        autoClose: 2000,
-      });
-      
-      // Redirect to dashboard
+      toast.success('Login successful! 🎉');
       navigate('/dashboard');
       setLoading(false);
     }, 1500);
@@ -42,43 +38,38 @@ const LoginPage = () => {
   return (
     <div className="auth-page">
       <div className="auth-container">
-        {/* Left Side - Branding */}
-        <div className="auth-branding">
-          <div className="branding-content">
-            <div className="brand-logo">
-              <span className="logo-icon">🧺</span>
-              <span className="logo-text">CleanPro</span>
+        {/* Left Side - Slideshow */}
+        <div className="auth-branding auth-slideshow-section">
+          <ImageSlideshow
+            images={SLIDESHOW_IMAGES.login}
+            interval={4000}
+            transition="fade"
+            showCaptions={true}
+            showIndicators={true}
+            className="auth-slideshow"
+          />
+          
+          <div className="auth-branding-overlay">
+            <div className="branding-content">
+              <div className="brand-logo">
+                <span className="logo-icon">🧺</span>
+                <span className="logo-text">CleanPro</span>
+              </div>
+              <h1 className="branding-title">Welcome Back!</h1>
+              <p className="branding-description">
+                Sign in to access your dry cleaning management dashboard
+              </p>
             </div>
-            <h1 className="branding-title">Welcome Back!</h1>
-            <p className="branding-description">
-              Sign in to access your dry cleaning management dashboard
-            </p>
-            <div className="branding-features">
-              <div className="feature-item">
-                <span className="feature-icon">✓</span>
-                <span>Manage orders efficiently</span>
-              </div>
-              <div className="feature-item">
-                <span className="feature-icon">✓</span>
-                <span>Track customer data</span>
-              </div>
-              <div className="feature-item">
-                <span className="feature-icon">✓</span>
-                <span>Real-time analytics</span>
-              </div>
+            
+            <div className="branding-footer">
+              <button className="back-to-home" onClick={() => navigate('/')}>
+                 Back to Home
+              </button>
             </div>
-          </div>
-          <div className="branding-footer">
-            <button 
-              className="back-to-home"
-              onClick={() => navigate('/')}
-            >
-              ← Back to Home
-            </button>
           </div>
         </div>
 
-        {/* Right Side - Login Form */}
+        {/* Right Side - Form */}
         <div className="auth-form-container">
           <div className="theme-toggle-wrapper">
             <ThemeToggle />
@@ -96,7 +87,7 @@ const LoginPage = () => {
                 <input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -108,7 +99,7 @@ const LoginPage = () => {
                 <input
                   id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -129,11 +120,7 @@ const LoginPage = () => {
                 </a>
               </div>
 
-              <button 
-                type="submit" 
-                className="auth-submit-btn"
-                disabled={loading}
-              >
+              <button type="submit" className="auth-submit-btn" disabled={loading}>
                 {loading ? (
                   <>
                     <span className="spinner"></span>
@@ -151,10 +138,7 @@ const LoginPage = () => {
             <div className="auth-footer">
               <p>
                 Don't have an account?{' '}
-                <button 
-                  className="auth-link"
-                  onClick={() => navigate('/register')}
-                >
+                <button className="auth-link" onClick={() => navigate('/register')}>
                   Create one
                 </button>
               </p>
