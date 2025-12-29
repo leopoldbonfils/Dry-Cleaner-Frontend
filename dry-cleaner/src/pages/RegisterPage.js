@@ -1,10 +1,10 @@
-// src/pages/RegisterPage.js (Updated with Slideshow)
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ThemeToggle from '../components/common/ThemeToggle';
 import ImageSlideshow from '../components/common/ImageSlideshow';
 import { SLIDESHOW_IMAGES, preloadSlideshowImages } from '../config/slideshowImages';
+import { authAPI } from '../components/services/api';
 import './AuthPages.css';
 
 const RegisterPage = () => {
@@ -20,7 +20,6 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  // Preload images
   useEffect(() => {
     preloadSlideshowImages();
   }, []);
@@ -37,11 +36,16 @@ const RegisterPage = () => {
     
     if (!formData.fullName || !formData.email || !formData.password) {
       toast.warning('Please fill in all required fields');
-      return;
+      return;       
     }
 
     if (formData.password !== formData.confirmPassword) {
       toast.error('Passwords do not match');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
       return;
     }
 
@@ -51,17 +55,31 @@ const RegisterPage = () => {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      toast.success('Account created successfully! 🎉');
-      navigate('/dashboard');
+    try {
+      const response = await authAPI.register({
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        businessName: formData.businessName,
+        password: formData.password
+      });
+
+      toast.success(response.message || 'Registration successful! 🎉');
+      
+      // ✅ Redirect to LOGIN page (not OTP page)
+      setTimeout(() => {
+        navigate('/login');
+      }, 1500);
+    } catch (error) {
+      toast.error(error.message || 'Registration failed');
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (
     <div className="auth-page">
       <div className="auth-container register-container">
-        {/* Left Side - Slideshow */}
         <div className="auth-branding auth-slideshow-section">
           <ImageSlideshow
             images={SLIDESHOW_IMAGES.register}
@@ -86,13 +104,12 @@ const RegisterPage = () => {
             
             <div className="branding-footer">
               <button className="back-to-home" onClick={() => navigate('/')}>
-                 Back to Home
+                ← Back to Home
               </button>
             </div>
           </div>
         </div>
 
-        {/* Right Side - Form */}
         <div className="auth-form-container">
           <div className="theme-toggle-wrapper">
             <ThemeToggle />
@@ -161,7 +178,7 @@ const RegisterPage = () => {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Enter your password (min 6 characters)"
                   value={formData.password}
                   onChange={handleChange}
                   required

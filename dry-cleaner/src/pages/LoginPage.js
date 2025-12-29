@@ -1,10 +1,10 @@
-// src/pages/LoginPage.js (Updated with Slideshow)
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ThemeToggle from '../components/common/ThemeToggle';
 import ImageSlideshow from '../components/common/ImageSlideshow';
 import { SLIDESHOW_IMAGES, preloadSlideshowImages } from '../config/slideshowImages';
+import { authAPI } from '../components/services/api';
 import './AuthPages.css';
 
 const LoginPage = () => {
@@ -14,7 +14,6 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Preload images
   useEffect(() => {
     preloadSlideshowImages();
   }, []);
@@ -28,17 +27,46 @@ const LoginPage = () => {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      toast.success('Login successful! 🎉');
-      navigate('/dashboard');
+    try {
+      const response = await authAPI.login({
+        email,
+        password
+      });
+
+      // ✅ Check if OTP verification is required
+      if (response.requiresVerification) {
+        toast.info(response.message || 'Please verify your account');
+        setTimeout(() => {
+          navigate('/verify-otp', { 
+            state: { 
+              email,
+              fromRegistration: false
+            } 
+          });
+        }, 1500);
+        return;
+      }
+
+      // This code won't run now since we always require OTP
+      toast.success(response.message || 'Login successful! 🎉');
+      
+      if (rememberMe) {
+        localStorage.setItem('userEmail', email);
+      }
+      
+      localStorage.setItem('user', JSON.stringify(response.data));
+      
+      setTimeout(() => navigate('/dashboard'), 1500);
+    } catch (error) {
+      toast.error(error.message || 'Login failed');
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (
     <div className="auth-page">
       <div className="auth-container">
-        {/* Left Side - Slideshow */}
         <div className="auth-branding auth-slideshow-section">
           <ImageSlideshow
             images={SLIDESHOW_IMAGES.login}
@@ -63,13 +91,12 @@ const LoginPage = () => {
             
             <div className="branding-footer">
               <button className="back-to-home" onClick={() => navigate('/')}>
-                 Back to Home
+                ← Back to Home
               </button>
             </div>
           </div>
         </div>
 
-        {/* Right Side - Form */}
         <div className="auth-form-container">
           <div className="theme-toggle-wrapper">
             <ThemeToggle />

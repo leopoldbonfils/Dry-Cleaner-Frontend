@@ -17,10 +17,13 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     console.log(`🔵 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    console.log('📤 Original Data:', config.data); // ✅ Log original data
     
     // Transform request data from camelCase to snake_case
     if (config.data) {
-      config.data = camelToSnake(config.data);
+      const transformed = camelToSnake(config.data);
+      console.log('🔄 Transformed Data:', transformed); // ✅ Log transformed data
+      config.data = transformed;
     }
     
     return config;
@@ -44,13 +47,33 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('🔴 Response Error:', error.response?.data || error.message);
+    // ✅ Enhanced error logging
+    console.error('🔴 Response Error Details:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      url: error.config?.url,
+      method: error.config?.method
+    });
     
     // Handle specific error cases
     if (error.response) {
       // Server responded with error status
-      const message = error.response.data?.message || 'An error occurred';
-      throw new Error(message);
+      const errorData = error.response.data;
+      
+      // ✅ Transform error response if needed
+      const transformedError = snakeToCamel(errorData);
+      
+      // ✅ Get the error message
+      const message = transformedError?.message || errorData?.message || 'An error occurred';
+      
+      // ✅ Create error with additional info
+      const customError = new Error(message);
+      customError.response = error.response;
+      customError.status = error.response.status;
+      customError.data = transformedError;
+      
+      throw customError;
     } else if (error.request) {
       // Request was made but no response received
       throw new Error('Unable to connect to server. Please check if the backend is running.');
@@ -62,6 +85,67 @@ api.interceptors.response.use(
 );
 
 /**
+ * Authentication API
+ */
+export const authAPI = {
+  /**
+   * Register new user
+   */
+  register: async (userData) => {
+    try {
+      console.log('🔐 Registering user:', userData);
+      const response = await api.post('/auth/register', userData);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Registration failed:', error.message);
+      throw error;
+    }
+  },
+
+  /**
+   * Login user
+   */
+  login: async (credentials) => {
+    try {
+      console.log('🔐 Logging in user:', { email: credentials.email });
+      const response = await api.post('/auth/login', credentials);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Login failed:', error.message);
+      throw error;
+    }
+  },
+
+  /**
+   * Verify OTP
+   */
+  verifyOTP: async (otpData) => {
+    try {
+      console.log('🔐 Verifying OTP for:', otpData.email);
+      const response = await api.post('/auth/verify-otp', otpData);
+      return response.data;
+    } catch (error) {
+      console.error('❌ OTP verification failed:', error.message);
+      throw error;
+    }
+  },
+
+  /**
+   * Resend OTP
+   */
+  resendOTP: async (email) => {
+    try {
+      console.log('🔐 Resending OTP to:', email);
+      const response = await api.post('/auth/resend-otp', { email });
+      return response.data;
+    } catch (error) {
+      console.error('❌ Resend OTP failed:', error.message);
+      throw error;
+    }
+  }
+};
+
+/**
  * Orders API
  */
 export const ordersAPI = {
@@ -70,7 +154,7 @@ export const ordersAPI = {
    */
   getAll: async () => {
     const response = await api.get('/orders');
-    return response.data.data; // Returns transformed camelCase data
+    return response.data.data;
   },
 
   /**
@@ -78,7 +162,7 @@ export const ordersAPI = {
    */
   getById: async (id) => {
     const response = await api.get(`/orders/${id}`);
-    return response.data.data; // Returns transformed camelCase data
+    return response.data.data;
   },
 
   /**
@@ -86,7 +170,7 @@ export const ordersAPI = {
    */
   create: async (orderData) => {
     const response = await api.post('/orders', orderData);
-    return response.data.data; // Returns transformed camelCase data
+    return response.data.data;
   },
 
   /**
@@ -94,7 +178,7 @@ export const ordersAPI = {
    */
   update: async (id, updates) => {
     const response = await api.put(`/orders/${id}`, updates);
-    return response.data.data; // Returns transformed camelCase data
+    return response.data.data;
   },
 
   /**
@@ -112,7 +196,7 @@ export const ordersAPI = {
     const response = await api.get('/orders/search', {
       params: { query }
     });
-    return response.data.data; // Returns transformed camelCase data
+    return response.data.data;
   },
 
   /**
@@ -120,7 +204,7 @@ export const ordersAPI = {
    */
   getStats: async () => {
     const response = await api.get('/orders/stats');
-    return response.data.data; // Returns transformed camelCase data
+    return response.data.data;
   }
 };
 

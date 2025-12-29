@@ -70,50 +70,68 @@ export const getOrderStats = (orders) => {
   };
 };
 
-// ===== NEW: DATA TRANSFORMATION FUNCTIONS =====
-
-/**
- * Convert snake_case to camelCase for objects and arrays
- * This handles the backend response format
- */
-export const snakeToCamel = (obj) => {
-  // Handle arrays
-  if (Array.isArray(obj)) {
-    return obj.map(item => snakeToCamel(item));
-  }
-  
-  // Handle null or non-objects
-  if (obj === null || typeof obj !== 'object') {
-    return obj;
-  }
-  
-  // Convert object keys
-  return Object.keys(obj).reduce((acc, key) => {
-    const camelKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
-    acc[camelKey] = snakeToCamel(obj[key]);
-    return acc;
-  }, {});
-};
+// ===== DATA TRANSFORMATION FUNCTIONS =====
 
 /**
  * Convert camelCase to snake_case for objects and arrays
  * This handles the frontend data before sending to backend
  */
 export const camelToSnake = (obj) => {
+  // Handle null or undefined
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+  
   // Handle arrays
   if (Array.isArray(obj)) {
     return obj.map(item => camelToSnake(item));
   }
   
-  // Handle null or non-objects
-  if (obj === null || typeof obj !== 'object') {
+  // Handle non-objects (primitives, Date, etc.)
+  if (typeof obj !== 'object' || obj instanceof Date) {
     return obj;
   }
   
   // Convert object keys
-  return Object.keys(obj).reduce((acc, key) => {
-    const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-    acc[snakeKey] = camelToSnake(obj[key]);
-    return acc;
-  }, {});
+  const result = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      // Convert camelCase to snake_case
+      const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+      result[snakeKey] = camelToSnake(obj[key]);
+    }
+  }
+  return result;
+};
+
+/**
+ * Convert snake_case to camelCase for objects and arrays
+ * This handles the backend response format
+ */
+export const snakeToCamel = (obj) => {
+  // Handle null or undefined
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+  
+  // Handle arrays
+  if (Array.isArray(obj)) {
+    return obj.map(item => snakeToCamel(item));
+  }
+  
+  // Handle non-objects (primitives, Date, etc.)
+  if (typeof obj !== 'object' || obj instanceof Date) {
+    return obj;
+  }
+  
+  // Convert object keys
+  const result = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      // Convert snake_case to camelCase
+      const camelKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+      result[camelKey] = snakeToCamel(obj[key]);
+    }
+  }
+  return result;
 };

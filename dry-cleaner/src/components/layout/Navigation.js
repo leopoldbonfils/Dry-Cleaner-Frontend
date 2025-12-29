@@ -1,8 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ Added
+import { toast } from 'react-toastify'; // ✅ Added
 import { MENU_ITEMS } from '../../utils/constants';
 import './Navigation.css';
 
 const Navigation = ({ currentView, onNavigate, collapsed, open }) => {
+  const navigate = useNavigate(); // ✅ Added hook
+
   // Insert "New Order" button after Dashboard (index 1)
   const menuWithNewOrder = [
     MENU_ITEMS[0], // Dashboard
@@ -11,9 +15,22 @@ const Navigation = ({ currentView, onNavigate, collapsed, open }) => {
   ];
 
   const handleLogout = () => {
-    console.log('🚪 Logging out...');
-    // TODO: Implement actual logout logic
-    alert('Logout functionality coming soon!');
+    if (window.confirm('Are you sure you want to logout?')) {
+      // Clear stored user data
+      localStorage.removeItem('user');
+      localStorage.removeItem('userEmail');
+      
+      // Show success message
+      toast.info('Logged out successfully', {
+        position: "top-right",
+        autoClose: 2000,
+      });
+      
+      // Redirect to login page
+      setTimeout(() => {
+        navigate('/login');
+      }, 500);
+    }
   };
 
   return (

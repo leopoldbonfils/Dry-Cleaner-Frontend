@@ -424,3 +424,46 @@
     font-size: 28px;
   }
 }
+
+/* OTP Input Styles */
+.otp-input-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.otp-input {
+  width: 50px;
+  height: 60px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  border: 2px solid var(--border-default);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.otp-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+.otp-input:not(:placeholder-shown) {
+  border-color: #3b82f6;
+}
+
+@media (max-width: 480px) {
+  .otp-input {
+    width: 45px;
+    height: 55px;
+    font-size: 20px;
+  }
+  
+  .otp-input-group {
+    gap: 8px;
+  }
+}
