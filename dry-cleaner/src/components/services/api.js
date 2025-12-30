@@ -17,12 +17,12 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     console.log(`🔵 API Request: ${config.method?.toUpperCase()} ${config.url}`);
-    console.log('📤 Original Data:', config.data); // ✅ Log original data
+    console.log('📤 Original Data:', config.data);
     
     // Transform request data from camelCase to snake_case
     if (config.data) {
       const transformed = camelToSnake(config.data);
-      console.log('🔄 Transformed Data:', transformed); // ✅ Log transformed data
+      console.log('🔄 Transformed Data:', transformed);
       config.data = transformed;
     }
     
@@ -47,7 +47,7 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // ✅ Enhanced error logging
+    // Enhanced error logging
     console.error('🔴 Response Error Details:', {
       status: error.response?.status,
       statusText: error.response?.statusText,
@@ -61,13 +61,13 @@ api.interceptors.response.use(
       // Server responded with error status
       const errorData = error.response.data;
       
-      // ✅ Transform error response if needed
+      // Transform error response if needed
       const transformedError = snakeToCamel(errorData);
       
-      // ✅ Get the error message
+      // Get the error message
       const message = transformedError?.message || errorData?.message || 'An error occurred';
       
-      // ✅ Create error with additional info
+      // Create error with additional info
       const customError = new Error(message);
       customError.response = error.response;
       customError.status = error.response.status;
@@ -140,6 +140,48 @@ export const authAPI = {
       return response.data;
     } catch (error) {
       console.error('❌ Resend OTP failed:', error.message);
+      throw error;
+    }
+  },
+
+  /**
+   * Forgot Password
+   */
+  forgotPassword: async (data) => {
+    try {
+      console.log('🔐 Requesting password reset for:', data.email);
+      const response = await api.post('/auth/forgot-password', data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Forgot password failed:', error.message);
+      throw error;
+    }
+  },
+
+  /**
+   * Verify Reset OTP
+   */
+  verifyResetOTP: async (data) => {
+    try {
+      console.log('🔐 Verifying reset OTP for:', data.email);
+      const response = await api.post('/auth/verify-reset-otp', data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Reset OTP verification failed:', error.message);
+      throw error;
+    }
+  },
+
+  /**
+   * Reset Password
+   */
+  resetPassword: async (data) => {
+    try {
+      console.log('🔐 Resetting password for:', data.email);
+      const response = await api.post('/auth/reset-password', data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Reset password failed:', error.message);
       throw error;
     }
   }

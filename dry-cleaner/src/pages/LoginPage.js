@@ -142,9 +142,13 @@ const LoginPage = () => {
                   />
                   <span>Remember me</span>
                 </label>
-                <a href="#forgot" className="forgot-link">
+                <button 
+                  type="button"
+                  className="auth-link" 
+                  onClick={() => navigate('/forgot-password')}
+                >
                   Forgot password?
-                </a>
+                </button>
               </div>
 
               <button type="submit" className="auth-submit-btn" disabled={loading}>

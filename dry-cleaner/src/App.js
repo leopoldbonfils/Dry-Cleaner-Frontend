@@ -4,6 +4,9 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import OTPVerification from './pages/OTPVerification';
+import ForgotPassword from './pages/ForgotPassword';
+import VerifyResetOTP from './pages/VerifyResetOTP';
+import ResetPassword from './pages/ResetPassword';
 import DashboardApp from './pages/DashboardApp';
 
 function App() {
@@ -15,6 +18,9 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-otp" element={<OTPVerification />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-reset-otp" element={<VerifyResetOTP />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         
         {/* Protected Route - Dashboard */}
         <Route path="/dashboard" element={<DashboardApp />} />
