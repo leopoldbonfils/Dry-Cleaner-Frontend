@@ -1,7 +1,7 @@
 /* Filter buttons - override Button.css if needed */
 .filter-buttons .btn {
-  background: var(--bg-tertiary); /* ✅ Theme-aware */
-  color: var(--text-primary); /* ✅ Theme-aware */
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
   border: 1px solid var(--border-default);
   transition: all 0.2s ease;
 }
@@ -13,13 +13,13 @@
 }
 
 .filter-buttons .btn-primary {
-  background: var(--button-primary-bg); /* ✅ Active filter */
+  background: var(--button-primary-bg);
   color: var(--button-primary-text);
   border-color: var(--button-primary-bg);
 }
 
 .filter-buttons .btn-secondary {
-  background: var(--bg-tertiary); /* ✅ Inactive filter */
+  background: var(--bg-tertiary);
   color: var(--text-primary);
   border: 1px solid var(--border-default);
 }
@@ -82,21 +82,24 @@
   color: var(--text-secondary);
 }
 
+/* Improved grid layout for emails */
 .order-details {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
 }
 
 .detail-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
+  min-width: 0;
 }
 
 .detail-icon {
   font-size: 20px;
   color: var(--text-secondary);
+  flex-shrink: 0;
 }
 
 .detail-label {
@@ -112,6 +115,17 @@
   font-size: 15px;
   color: var(--text-primary);
   font-weight: 600;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Specific styling for email values */
+.detail-value.email-value {
+  font-size: 13px;
+  word-break: break-all;
+  line-height: 1.4;
 }
 
 @keyframes fadeIn {
@@ -134,5 +148,16 @@
   .order-details {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+  
+  .detail-item {
+    align-items: flex-start;
+  }
+}
+
+/* Tablet responsive */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .order-details {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

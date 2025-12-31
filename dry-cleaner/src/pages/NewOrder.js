@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify'; // ✅ Import toast
+import { toast } from 'react-toastify';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Input, { Select } from '../components/common/Input';
@@ -10,6 +10,7 @@ import './NewOrder.css';
 const NewOrder = ({ onSubmit, onCancel }) => {
   const [clientName, setClientName] = useState('');
   const [clientPhone, setClientPhone] = useState('');
+  const [clientEmail, setClientEmail] = useState(''); // ✅ Add email state
   const [items, setItems] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState('Cash');
   const [paymentStatus, setPaymentStatus] = useState('Unpaid');
@@ -33,14 +34,12 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       }]);
       setCurrentQty(1);
       
-      // ✅ Toast notification
       toast.success(`${typeLabel} added successfully!`, {
         position: "bottom-right",
         autoClose: 2000,
         hideProgressBar: true,
       });
     } else {
-      // ✅ Toast error
       toast.error('Quantity and price must be greater than 0', {
         position: "top-center",
         autoClose: 3000,
@@ -52,7 +51,6 @@ const NewOrder = ({ onSubmit, onCancel }) => {
     const removedItem = items[index];
     setItems(items.filter((_, i) => i !== index));
     
-    // ✅ Toast notification
     toast.info(`${removedItem.type} removed`, {
       position: "bottom-right",
       autoClose: 2000,
@@ -63,7 +61,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
   const totalAmount = calculateTotal(items);
 
   const handleSubmit = () => {
-    // ✅ Validation with toast
+    // ✅ Validation with email
     if (!clientName || !clientPhone || items.length === 0) {
       toast.warning('Please fill all required fields and add at least one item', {
         position: "top-center",
@@ -82,9 +80,22 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       return;
     }
 
+    // ✅ Email validation (optional but must be valid if provided)
+    if (clientEmail && clientEmail.trim() !== '') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(clientEmail)) {
+        toast.error('Invalid email address!', {
+          position: "top-center",
+          autoClose: 4000,
+        });
+        return;
+      }
+    }
+
     onSubmit({
       clientName,
       clientPhone,
+      clientEmail: clientEmail.trim() || null, // ✅ Send email or null
       items,
       paymentMethod,
       paymentStatus,
@@ -111,6 +122,34 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             onChange={(e) => setClientPhone(e.target.value)}
             required
           />
+          {/* ✅ Add Email Field */}
+          <Input
+            label="Email Address (Optional)"
+            type="email"
+            placeholder="client@example.com"
+            value={clientEmail}
+            onChange={(e) => setClientEmail(e.target.value)}
+            icon="📧"
+          />
+        </div>
+        <div style={{ 
+          background: 'var(--bg-tertiary)', 
+          padding: '12px 16px', 
+          borderRadius: '10px',
+          marginTop: '15px',
+          border: '1px solid var(--border-default)'
+        }}>
+          <p style={{ 
+            margin: 0, 
+            fontSize: '13px', 
+            color: 'var(--text-secondary)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <span style={{ fontSize: '16px' }}>ℹ️</span>
+            <span>If you provide an email, the client will receive order confirmation and status updates automatically.</span>
+          </p>
         </div>
       </Card>
 
@@ -199,6 +238,12 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             <span>Payment Status:</span>
             <span>{paymentStatus}</span>
           </div>
+          {clientEmail && (
+            <div className="summary-row">
+              <span>📧 Email Notification:</span>
+              <span style={{ color: '#10b981', fontWeight: 600 }}>Enabled</span>
+            </div>
+          )}
           <div className="summary-row summary-total">
             <span>TOTAL AMOUNT:</span>
             <span>{formatCurrency(totalAmount)}</span>

@@ -255,6 +255,16 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
                   <span className="od-value">{order.clientPhone}</span>
                 </div>
               </div>
+              {/* ✅ Add Email Display */}
+              {order.clientEmail && (
+                <div className="od-client-row">
+                  <span className="od-icon">📧</span>
+                  <div className="od-field">
+                    <span className="od-label">Email</span>
+                    <span className="od-value">{order.clientEmail}</span>
+                  </div>
+                </div>
+              )}
             </Card>
 
             {/* ITEMS CARD */}

@@ -83,6 +83,16 @@ const OrdersList = ({ orders, onViewOrder }) => {
                       <div className="detail-value">{order.clientPhone}</div>
                     </div>
                   </div>
+                  {/* ✅ Add Email if exists */}
+                  {order.clientEmail && (
+                    <div className="detail-item">
+                      <span className="detail-icon">📧</span>
+                      <div>
+                        <div className="detail-label">Email</div>
+                        <div className="detail-value email-value">{order.clientEmail}</div>
+                      </div>
+                    </div>
+                  )}
                   <div className="detail-item">
                     <span className="detail-icon">👕</span>
                     <div>
