@@ -1,6 +1,6 @@
 // src/pages/DashboardApp.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ Add this
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navigation from '../components/layout/Navigation';
@@ -10,12 +10,13 @@ import OrdersList from './OrdersList';
 import SearchOrders from './SearchOrders';
 import NewOrder from './NewOrder';
 import OrderDetails from './OrderDetails';
+import Profile from './Profile'; // ✅ Make sure this is imported
 import { ordersAPI, healthCheck } from '../components/services/api';
 import '../styles/toast-custom.css';
 import '../App.css';
 
-function DashboardApp() { // ✅ Renamed from App
-  const navigate = useNavigate(); // ✅ Add navigation hook
+function DashboardApp() {
+  const navigate = useNavigate();
   const [currentView, setCurrentView] = useState('dashboard');
   const [orders, setOrders] = useState([]);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
@@ -156,6 +157,7 @@ function DashboardApp() { // ✅ Renamed from App
       case 'search': return 'Search Orders';
       case 'new-order': return 'Create New Order';
       case 'order-details': return 'Order Details';
+      case 'profile': return 'My Profile'; // ✅ Added
       default: return 'CleanPro';
     }
   };
@@ -265,6 +267,7 @@ function DashboardApp() { // ✅ Renamed from App
               setSidebarCollapsed(!sidebarCollapsed);
             }
           }}
+          onNavigate={handleNavigate} // ✅ Pass navigation handler
         />
         
         <div className="content-area">
@@ -305,10 +308,15 @@ function DashboardApp() { // ✅ Renamed from App
               onDelete={handleDeleteOrder}
             />
           )}
+
+          {/* ✅ Profile View */}
+          {currentView === 'profile' && (
+            <Profile />
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export default DashboardApp; 
+export default DashboardApp;

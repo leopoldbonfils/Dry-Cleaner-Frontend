@@ -184,6 +184,48 @@ export const authAPI = {
       console.error('❌ Reset password failed:', error.message);
       throw error;
     }
+  },
+
+  /**
+   * Get user profile
+   */
+  getProfile: async () => {
+    try {
+      console.log('📖 Fetching profile');
+      const response = await api.get('/auth/profile');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Failed to fetch profile:', error.message);
+      throw error;
+    }
+  },
+
+  /**
+   * Update user profile
+   */
+  updateProfile: async (profileData) => {
+    try {
+      console.log('📝 Updating profile:', profileData);
+      const response = await api.put('/auth/profile', profileData);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Profile update failed:', error.message);
+      throw error;
+    }
+  },
+
+  /**
+   * Change password
+   */
+  changePassword: async (passwordData) => {
+    try {
+      console.log('🔒 Changing password');
+      const response = await api.put('/auth/change-password', passwordData);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Password change failed:', error.message);
+      throw error;
+    }
   }
 };
 
