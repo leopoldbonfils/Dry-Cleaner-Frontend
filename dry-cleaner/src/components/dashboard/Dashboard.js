@@ -6,7 +6,7 @@ import StatusBadge from '../common/StatusBadge';
 import { formatCurrency, formatDate } from '../../utils/helpers';
 import './Dashboard.css';
 
-const Dashboard = ({ stats, recentOrders, onViewOrder }) => {
+const Dashboard = ({ stats, recentOrders, onViewOrder }) => { // ✅ Removed allOrders prop
   return (
     <div className="dashboard">
       <div className="stats-grid">

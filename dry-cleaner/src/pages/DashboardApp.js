@@ -14,6 +14,7 @@ import Profile from './Profile'; // ✅ Make sure this is imported
 import { ordersAPI, healthCheck } from '../components/services/api';
 import '../styles/toast-custom.css';
 import '../App.css';
+import Reports from './Reports';
 
 function DashboardApp() {
   const navigate = useNavigate();
@@ -157,6 +158,7 @@ function DashboardApp() {
       case 'search': return 'Search Orders';
       case 'new-order': return 'Create New Order';
       case 'order-details': return 'Order Details';
+      case 'reports': return 'Reports';
       case 'profile': return 'My Profile'; // ✅ Added
       default: return 'CleanPro';
     }
@@ -275,6 +277,7 @@ function DashboardApp() {
             <Dashboard
               stats={stats}
               recentOrders={orders.slice(0, 5)}
+              allOrders={orders} 
               onViewOrder={handleViewOrder}
             />
           )}
@@ -291,6 +294,10 @@ function DashboardApp() {
               orders={orders}
               onViewOrder={handleViewOrder}
             />
+          )}
+
+          {currentView === 'reports' && (
+            <Reports orders={orders} />
           )}
           
           {currentView === 'new-order' && (
