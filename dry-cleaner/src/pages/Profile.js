@@ -51,6 +51,7 @@ const Profile = () => {
           phone: userData.phone || '',
           businessName: userData.businessName || ''
         });
+      
       }
 
       if (storedImage) {
@@ -236,13 +237,15 @@ const Profile = () => {
   };
 
   const handleCancelEdit = () => {
-    // Reset form to original user data
-    setFormData({
-      fullName: user.fullName || '',
-      email: user.email || '',
-      phone: user.phone || '',
-      businessName: user.businessName || ''
-    });
+    // ✅ FIXED: Added null check
+    if (user) {
+      setFormData({
+        fullName: user.fullName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        businessName: user.businessName || ''
+      });
+    }
     setErrors({});
     setEditing(false);
   };
@@ -265,6 +268,7 @@ const Profile = () => {
       </div>
     );
   }
+
 
   return (
     <div className="profile-page">
