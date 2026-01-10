@@ -10,10 +10,11 @@ import './NewOrder.css';
 const NewOrder = ({ onSubmit, onCancel }) => {
   const [clientName, setClientName] = useState('');
   const [clientPhone, setClientPhone] = useState('');
-  const [clientEmail, setClientEmail] = useState(''); // ✅ Add email state
+  const [clientEmail, setClientEmail] = useState('');
   const [items, setItems] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState('Cash');
   const [paymentStatus, setPaymentStatus] = useState('Unpaid');
+  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ Add submitting state
 
   const [currentType, setCurrentType] = useState('shirt');
   const [currentQty, setCurrentQty] = useState(1);
@@ -60,8 +61,17 @@ const NewOrder = ({ onSubmit, onCancel }) => {
 
   const totalAmount = calculateTotal(items);
 
-  const handleSubmit = () => {
-    // ✅ Validation with email
+  const handleSubmit = async () => {
+    // ✅ Prevent multiple submissions
+    if (isSubmitting) {
+      toast.warning('Please wait, order is being created...', {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      return;
+    }
+
+    // Validation with email
     if (!clientName || !clientPhone || items.length === 0) {
       toast.warning('Please fill all required fields and add at least one item', {
         position: "top-center",
@@ -70,7 +80,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       return;
     }
 
-    // ✅ Phone validation
+    // Phone validation
     const phoneRegex = /^07[2-9]\d{7}$/;
     if (!phoneRegex.test(clientPhone)) {
       toast.error('Invalid phone number! Use format: 078XXXXXXX', {
@@ -80,7 +90,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       return;
     }
 
-    // ✅ Email validation (optional but must be valid if provided)
+    // Email validation (optional but must be valid if provided)
     if (clientEmail && clientEmail.trim() !== '') {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(clientEmail)) {
@@ -92,15 +102,26 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       }
     }
 
-    onSubmit({
-      clientName,
-      clientPhone,
-      clientEmail: clientEmail.trim() || null, // ✅ Send email or null
-      items,
-      paymentMethod,
-      paymentStatus,
-      totalAmount
-    });
+    // ✅ Set submitting state to true
+    setIsSubmitting(true);
+
+    try {
+      await onSubmit({
+        clientName,
+        clientPhone,
+        clientEmail: clientEmail.trim() || null,
+        items,
+        paymentMethod,
+        paymentStatus,
+        totalAmount
+      });
+      
+      // Success - form will be closed by parent component
+    } catch (error) {
+      // Error handling - re-enable button on error
+      console.error('Error creating order:', error);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -113,6 +134,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
             required
+            disabled={isSubmitting} // ✅ Disable during submission
           />
           <Input
             label="Phone Number"
@@ -121,8 +143,8 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={clientPhone}
             onChange={(e) => setClientPhone(e.target.value)}
             required
+            disabled={isSubmitting} // ✅ Disable during submission
           />
-          {/* ✅ Add Email Field */}
           <Input
             label="Email Address (Optional)"
             type="email"
@@ -130,6 +152,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={clientEmail}
             onChange={(e) => setClientEmail(e.target.value)}
             icon="📧"
+            disabled={isSubmitting} // ✅ Disable during submission
           />
         </div>
         <div style={{ 
@@ -160,6 +183,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={currentType}
             onChange={(e) => setCurrentType(e.target.value)}
             options={CLOTHING_TYPES}
+            disabled={isSubmitting} // ✅ Disable during submission
           />
           <Input
             label="Quantity"
@@ -167,6 +191,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             min="1"
             value={currentQty}
             onChange={(e) => setCurrentQty(parseInt(e.target.value) || 1)}
+            disabled={isSubmitting} // ✅ Disable during submission
           />
           <Input
             label="Price (RWF)"
@@ -174,9 +199,15 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             min="0"
             value={currentPrice}
             onChange={(e) => setCurrentPrice(parseInt(e.target.value) || 0)}
+            disabled={isSubmitting} // ✅ Disable during submission
           />
         </div>
-        <Button variant="primary" icon="➕" onClick={handleAddItem}>
+        <Button 
+          variant="primary" 
+          icon="➕" 
+          onClick={handleAddItem}
+          disabled={isSubmitting} // ✅ Disable during submission
+        >
           Add Item
         </Button>
 
@@ -198,6 +229,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
                     size="small"
                     icon="🗑️"
                     onClick={() => handleRemoveItem(index)}
+                    disabled={isSubmitting} // ✅ Disable during submission
                   />
                 </div>
               </div>
@@ -213,12 +245,14 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={paymentMethod}
             onChange={(e) => setPaymentMethod(e.target.value)}
             options={PAYMENT_METHODS.map(m => ({ value: m, label: m }))}
+            disabled={isSubmitting} // ✅ Disable during submission
           />
           <Select
             label="Payment Status"
             value={paymentStatus}
             onChange={(e) => setPaymentStatus(e.target.value)}
             options={PAYMENT_STATUSES.map(s => ({ value: s, label: s }))}
+            disabled={isSubmitting} // ✅ Disable during submission
           />
         </div>
       </Card>
@@ -252,10 +286,21 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       )}
 
       <div className="form-actions">
-        <Button variant="success" icon="✅" onClick={handleSubmit} fullWidth>
-          Create Order
+        <Button 
+          variant="success" 
+          icon={isSubmitting ? "⏳" : "✅"} 
+          onClick={handleSubmit} 
+          fullWidth
+          disabled={isSubmitting} // ✅ Disable button during submission
+        >
+          {isSubmitting ? 'Creating Order...' : 'Create Order'}
         </Button>
-        <Button variant="secondary" icon="✖" onClick={onCancel}>
+        <Button 
+          variant="secondary" 
+          icon="✖" 
+          onClick={onCancel}
+          disabled={isSubmitting} // ✅ Disable cancel during submission
+        >
           Cancel
         </Button>
       </div>

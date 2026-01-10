@@ -10,7 +10,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 seconds timeout
+  timeout: 30000, // ✅ Increased timeout to 30 seconds for email sending
 });
 
 // Request interceptor - transform camelCase to snake_case
@@ -47,13 +47,14 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Enhanced error logging
+    // ✅ Enhanced error logging
     console.error('🔴 Response Error Details:', {
       status: error.response?.status,
       statusText: error.response?.statusText,
       data: error.response?.data,
       url: error.config?.url,
-      method: error.config?.method
+      method: error.config?.method,
+      message: error.message
     });
     
     // Handle specific error cases
@@ -67,6 +68,18 @@ api.interceptors.response.use(
       // Get the error message
       const message = transformedError?.message || errorData?.message || 'An error occurred';
       
+      // ✅ Check if this is actually a success response with wrong status code
+      if (transformedError?.success === true || errorData?.success === true) {
+        console.log('✅ Response marked as success despite error status');
+        return Promise.resolve({
+          data: transformedError || errorData,
+          status: error.response.status,
+          statusText: error.response.statusText,
+          headers: error.response.headers,
+          config: error.config
+        });
+      }
+      
       // Create error with additional info
       const customError = new Error(message);
       customError.response = error.response;
@@ -75,7 +88,10 @@ api.interceptors.response.use(
       
       throw customError;
     } else if (error.request) {
-      // Request was made but no response received
+      // ✅ Request was made but no response received - check if it's a timeout
+      if (error.code === 'ECONNABORTED') {
+        throw new Error('Request timeout. The server is taking too long to respond.');
+      }
       throw new Error('Unable to connect to server. Please check if the backend is running.');
     } else {
       // Something else happened
@@ -93,7 +109,7 @@ export const authAPI = {
    */
   register: async (userData) => {
     try {
-      console.log('🔐 Registering user:', userData);
+      console.log('📝 Registering user:', userData);
       const response = await api.post('/auth/register', userData);
       return response.data;
     } catch (error) {
@@ -237,58 +253,95 @@ export const ordersAPI = {
    * Get all orders
    */
   getAll: async () => {
-    const response = await api.get('/orders');
-    return response.data.data;
+    try {
+      const response = await api.get('/orders');
+      return response.data.data;
+    } catch (error) {
+      console.error('❌ Failed to fetch orders:', error.message);
+      throw error;
+    }
   },
 
   /**
    * Get single order by ID
    */
   getById: async (id) => {
-    const response = await api.get(`/orders/${id}`);
-    return response.data.data;
+    try {
+      const response = await api.get(`/orders/${id}`);
+      return response.data.data;
+    } catch (error) {
+      console.error('❌ Failed to fetch order:', error.message);
+      throw error;
+    }
   },
 
   /**
    * Create new order
    */
   create: async (orderData) => {
-    const response = await api.post('/orders', orderData);
-    return response.data.data;
+    try {
+      console.log('➕ Creating order via API...');
+      const response = await api.post('/orders', orderData);
+      console.log('✅ Order API response received:', response.data);
+      return response.data.data;
+    } catch (error) {
+      console.error('❌ Failed to create order:', error.message);
+      throw error;
+    }
   },
 
   /**
    * Update order
    */
   update: async (id, updates) => {
-    const response = await api.put(`/orders/${id}`, updates);
-    return response.data.data;
+    try {
+      const response = await api.put(`/orders/${id}`, updates);
+      return response.data.data;
+    } catch (error) {
+      console.error('❌ Failed to update order:', error.message);
+      throw error;
+    }
   },
 
   /**
    * Delete order
    */
   delete: async (id) => {
-    const response = await api.delete(`/orders/${id}`);
-    return response.data;
+    try {
+      const response = await api.delete(`/orders/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Failed to delete order:', error.message);
+      throw error;
+    }
   },
 
   /**
    * Search orders
    */
   search: async (query) => {
-    const response = await api.get('/orders/search', {
-      params: { query }
-    });
-    return response.data.data;
+    try {
+      const response = await api.get('/orders/search', {
+        params: { query }
+      });
+      return response.data.data;
+    } catch (error) {
+      console.error('❌ Failed to search orders:', error.message);
+      throw error;
+    }
   },
 
   /**
    * Get statistics
    */
   getStats: async () => {
-    const response = await api.get('/orders/stats');
-    return response.data.data;
+    try {
+      const response = await api.get('/orders/stats');
+      return response.data.data;
+    } catch (error) {
+      console.error('❌ Failed to fetch stats:', error.message);
+      throw error;
+    }
   }
 };
 

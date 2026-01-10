@@ -10,7 +10,7 @@ import OrdersList from './OrdersList';
 import SearchOrders from './SearchOrders';
 import NewOrder from './NewOrder';
 import OrderDetails from './OrderDetails';
-import Profile from './Profile'; // ✅ Make sure this is imported
+import Profile from './Profile';
 import { ordersAPI, healthCheck } from '../components/services/api';
 import '../styles/toast-custom.css';
 import '../App.css';
@@ -85,6 +85,7 @@ function DashboardApp() {
     } catch (error) {
       console.error('❌ Failed to fetch orders:', error);
       setOrders([]);
+      // Don't show error toast here - only if it's critical
     }
   };
 
@@ -101,6 +102,7 @@ function DashboardApp() {
       });
     } catch (error) {
       console.error('❌ Failed to fetch stats:', error);
+      // Keep existing stats on error
     }
   };
 
@@ -110,7 +112,17 @@ function DashboardApp() {
       const newOrder = await ordersAPI.create(orderData);
       console.log('✅ Order created:', newOrder);
       
-      await Promise.all([fetchOrders(), fetchStats()]);
+      // ✅ Refresh data with better error handling
+      try {
+        await Promise.all([fetchOrders(), fetchStats()]);
+      } catch (refreshError) {
+        console.warn('⚠️ Failed to refresh data after order creation:', refreshError);
+        // Still show success but warn about refresh
+        toast.warning('Order created but failed to refresh data. Please refresh manually.', {
+          position: "top-right",
+          autoClose: 4000,
+        });
+      }
       
       setCurrentView('orders');
       
@@ -120,10 +132,22 @@ function DashboardApp() {
       });
     } catch (error) {
       console.error('❌ Failed to create order:', error);
-      toast.error(`Failed to create order: ${error.message}`, {
+      
+      // ✅ Better error message
+      let errorMessage = 'Failed to create order';
+      if (error.message.includes('Unable to connect')) {
+        errorMessage = 'Cannot connect to server. Please check your connection and try again.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
       });
+      
+      // Re-throw error so NewOrder component can reset its state
+      throw error;
     }
   };
 
@@ -135,12 +159,28 @@ function DashboardApp() {
 
   const handleUpdateOrder = async () => {
     console.log('🔄 Refreshing data after order update...');
-    await Promise.all([fetchOrders(), fetchStats()]);
+    try {
+      await Promise.all([fetchOrders(), fetchStats()]);
+    } catch (error) {
+      console.warn('⚠️ Failed to refresh data:', error);
+      toast.warning('Failed to refresh data. Please refresh manually.', {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
   };
 
   const handleDeleteOrder = async () => {
     console.log('🗑️ Refreshing data after order deletion...');
-    await Promise.all([fetchOrders(), fetchStats()]);
+    try {
+      await Promise.all([fetchOrders(), fetchStats()]);
+    } catch (error) {
+      console.warn('⚠️ Failed to refresh data:', error);
+      toast.warning('Failed to refresh data. Please refresh manually.', {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
   };
 
   const handleNavigate = (view) => {
@@ -159,7 +199,7 @@ function DashboardApp() {
       case 'new-order': return 'Create New Order';
       case 'order-details': return 'Order Details';
       case 'reports': return 'Reports';
-      case 'profile': return 'My Profile'; // ✅ Added
+      case 'profile': return 'My Profile';
       default: return 'CleanPro';
     }
   };
@@ -269,7 +309,7 @@ function DashboardApp() {
               setSidebarCollapsed(!sidebarCollapsed);
             }
           }}
-          onNavigate={handleNavigate} // ✅ Pass navigation handler
+          onNavigate={handleNavigate}
         />
         
         <div className="content-area">
@@ -295,8 +335,7 @@ function DashboardApp() {
               onViewOrder={handleViewOrder}
             />
           )}
-
-          {currentView === 'reports' && (
+           {currentView === 'reports' && (
             <Reports orders={orders} />
           )}
           
@@ -316,7 +355,6 @@ function DashboardApp() {
             />
           )}
 
-          {/* ✅ Profile View */}
           {currentView === 'profile' && (
             <Profile />
           )}
