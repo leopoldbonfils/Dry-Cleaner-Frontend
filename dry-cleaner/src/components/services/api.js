@@ -10,7 +10,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000, // ✅ Increased timeout to 30 seconds for email sending
+  timeout: 120000, // ✅ Increased timeout to 120 seconds for email sending
 });
 
 // Request interceptor - transform camelCase to snake_case
