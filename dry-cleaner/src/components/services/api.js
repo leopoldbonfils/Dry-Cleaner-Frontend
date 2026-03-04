@@ -19,6 +19,20 @@ api.interceptors.request.use(
     console.log(`🔵 API Request: ${config.method?.toUpperCase()} ${config.url}`);
     console.log('📤 Original Data:', config.data);
     
+    // Attach logged-in user's ID to every request
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        const userId = parsed?.userId || parsed?.data?.userId;
+        if (userId) {
+          config.headers['x-user-id'] = userId;
+        }
+      }
+    } catch (e) {
+      // ignore localStorage parse errors
+    }
+    
     // Transform request data from camelCase to snake_case
     if (config.data) {
       const transformed = camelToSnake(config.data);

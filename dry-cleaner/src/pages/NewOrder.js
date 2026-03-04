@@ -17,23 +17,20 @@ const NewOrder = ({ onSubmit, onCancel }) => {
   const [isSubmitting, setIsSubmitting] = useState(false); // ✅ Add submitting state
 
   const [currentType, setCurrentType] = useState('shirt');
-  const [currentQty, setCurrentQty] = useState(1);
-  const [currentPrice, setCurrentPrice] = useState(1500);
-
-  useEffect(() => {
-    const defaultPrice = CLOTHING_TYPES.find((t) => t.value === currentType)?.defaultPrice || 1500;
-    setCurrentPrice(defaultPrice);
-  }, [currentType]);
+  const [currentQty, setCurrentQty] = useState('');
+  const [currentPrice, setCurrentPrice] = useState('');
 
   const handleAddItem = () => {
-    if (currentQty > 0 && currentPrice > 0) {
+    const qty = parseInt(currentQty);
+    const price = parseInt(currentPrice);
+    if (qty > 0 && price > 0) {
       const typeLabel = CLOTHING_TYPES.find((t) => t.value === currentType)?.label || currentType;
       setItems([...items, {
         type: typeLabel,
-        quantity: currentQty,
-        price: currentPrice
+        quantity: qty,
+        price: price
       }]);
-      setCurrentQty(1);
+      setCurrentQty('');
       
       toast.success(`${typeLabel} added successfully!`, {
         position: "bottom-right",
@@ -189,16 +186,18 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             label="Quantity"
             type="number"
             min="1"
+            placeholder="Enter quantity"
             value={currentQty}
-            onChange={(e) => setCurrentQty(parseInt(e.target.value) || 1)}
+            onChange={(e) => setCurrentQty(e.target.value)}
             disabled={isSubmitting} // ✅ Disable during submission
           />
           <Input
             label="Price (RWF)"
             type="number"
             min="0"
+            placeholder="Enter price"
             value={currentPrice}
-            onChange={(e) => setCurrentPrice(parseInt(e.target.value) || 0)}
+            onChange={(e) => setCurrentPrice(e.target.value)}
             disabled={isSubmitting} // ✅ Disable during submission
           />
         </div>
