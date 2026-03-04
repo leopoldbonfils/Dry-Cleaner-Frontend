@@ -80,6 +80,12 @@ const OTPVerification = () => {
       if (fromRegistration) {
         setTimeout(() => navigate('/login'), 1500);
       } else {
+        //  Save user session so they stay logged in
+        if (response.data) {
+          localStorage.setItem('user', JSON.stringify(response.data));
+          localStorage.setItem('userEmail', email);
+          localStorage.setItem('sessionTime', Date.now().toString());
+        }
         setTimeout(() => navigate('/dashboard'), 1500);
       }
     } catch (error) {

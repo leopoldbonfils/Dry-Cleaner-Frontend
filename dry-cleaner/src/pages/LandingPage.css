@@ -901,11 +901,36 @@
 
 @media (max-width: 768px) {
   .nav-container {
-    padding: 15px 20px;
+    padding: 12px 16px;
+    gap: 8px;
   }
-  
+
+  .nav-logo {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .logo-icon {
+    font-size: 24px;
+  }
+
   .logo-text {
-    font-size: 20px;
+    font-size: 18px;
+  }
+
+  .nav-actions {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Hide "Get Started" on mobile — Login is enough */
+  .nav-actions .btn-primary {
+    display: none;
+  }
+
+  .btn-ghost {
+    padding: 8px 16px;
+    font-size: 14px;
   }
   
   .hero-section-slideshow {
@@ -985,6 +1010,18 @@
 }
 
 @media (max-width: 480px) {
+  .nav-container {
+    padding: 10px 12px;
+  }
+
+  .logo-icon {
+    font-size: 20px;
+  }
+
+  .logo-text {
+    font-size: 16px;
+  }
+
   .hero-title {
     font-size: 32px;
   }

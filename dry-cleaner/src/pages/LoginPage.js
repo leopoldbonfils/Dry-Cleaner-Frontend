@@ -9,9 +9,9 @@ import './AuthPages.css';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(() => localStorage.getItem('rememberedEmail') || '');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(() => !!localStorage.getItem('rememberedEmail'));
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,14 @@ const LoginPage = () => {
         password
       });
 
-      // ✅ Check if OTP verification is required
+      //  Save or clear remembered email based on checkbox
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+
+      //  Check if OTP verification is required
       if (response.requiresVerification) {
         toast.info(response.message || 'Please verify your account');
         setTimeout(() => {
@@ -91,7 +98,7 @@ const LoginPage = () => {
             
             <div className="branding-footer">
               <button className="back-to-home" onClick={() => navigate('/')}>
-                ← Back to Home
+                 Back to Home
               </button>
             </div>
           </div>
