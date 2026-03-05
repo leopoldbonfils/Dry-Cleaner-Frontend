@@ -13,26 +13,18 @@ const api = axios.create({
   timeout: 120000, // ✅ Increased timeout to 120 seconds for email sending
 });
 
-// Request interceptor - transform camelCase to snake_case
+// Request interceptor - transform camelCase to snake_case and attach JWT
 api.interceptors.request.use(
   (config) => {
     console.log(`🔵 API Request: ${config.method?.toUpperCase()} ${config.url}`);
     console.log('📤 Original Data:', config.data);
     
-    // Attach logged-in user's ID to every request
-    try {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        const parsed = JSON.parse(storedUser);
-        const userId = parsed?.userId || parsed?.data?.userId;
-        if (userId) {
-          config.headers['x-user-id'] = userId;
-        }
-      }
-    } catch (e) {
-      // ignore localStorage parse errors
+    // Attach JWT token from localStorage
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
-    
+
     // Transform request data from camelCase to snake_case
     if (config.data) {
       const transformed = camelToSnake(config.data);

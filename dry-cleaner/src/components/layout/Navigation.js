@@ -16,9 +16,10 @@ const Navigation = ({ currentView, onNavigate, collapsed, open }) => {
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
-      // Clear stored user data
+      // Clear stored user data and JWT token
       localStorage.removeItem('user');
       localStorage.removeItem('userEmail');
+      localStorage.removeItem('token');
       
       // Show success message
       toast.info('Logged out successfully', {

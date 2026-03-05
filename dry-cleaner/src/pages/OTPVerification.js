@@ -80,11 +80,12 @@ const OTPVerification = () => {
       if (fromRegistration) {
         setTimeout(() => navigate('/login'), 1500);
       } else {
-        //  Save user session so they stay logged in
+        // Store JWT token and user data for authenticated requests
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+        }
         if (response.data) {
           localStorage.setItem('user', JSON.stringify(response.data));
-          localStorage.setItem('userEmail', email);
-          localStorage.setItem('sessionTime', Date.now().toString());
         }
         setTimeout(() => navigate('/dashboard'), 1500);
       }
