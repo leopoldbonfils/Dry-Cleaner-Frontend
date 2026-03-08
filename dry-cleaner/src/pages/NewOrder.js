@@ -14,7 +14,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
   const [items, setItems] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState('Cash');
   const [paymentStatus, setPaymentStatus] = useState('Unpaid');
-  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ Add submitting state
+  const [isSubmitting, setIsSubmitting] = useState(false); //  Add submitting state
 
   const [currentType, setCurrentType] = useState('shirt');
   const [currentQty, setCurrentQty] = useState('');
@@ -59,7 +59,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
   const totalAmount = calculateTotal(items);
 
   const handleSubmit = async () => {
-    // ✅ Prevent multiple submissions
+    //  Prevent multiple submissions
     if (isSubmitting) {
       toast.warning('Please wait, order is being created...', {
         position: "top-center",
@@ -77,10 +77,33 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       return;
     }
 
-    // Phone validation
+    // Client name validation
+    if (clientName.trim().length < 2) {
+      toast.error('Client name must be at least 2 characters', {
+        position: "top-center",
+        autoClose: 4000,
+      });
+      return;
+    }
+    if (clientName.trim().length > 60) {
+      toast.error('Client name must not exceed 60 characters', {
+        position: "top-center",
+        autoClose: 4000,
+      });
+      return;
+    }
+
+    // Phone validation — exactly 10 digits, Rwandan format
+    if (clientPhone.replace(/\D/g, '').length !== 10) {
+      toast.error(`Phone number must be exactly 10 digits (you entered ${clientPhone.replace(/\D/g, '').length})`, {
+        position: "top-center",
+        autoClose: 4000,
+      });
+      return;
+    }
     const phoneRegex = /^07[2-9]\d{7}$/;
     if (!phoneRegex.test(clientPhone)) {
-      toast.error('Invalid phone number! Use format: 078XXXXXXX', {
+      toast.error('Invalid phone number! Must start with 072–079 (e.g. 0781234567)', {
         position: "top-center",
         autoClose: 4000,
       });
@@ -89,9 +112,16 @@ const NewOrder = ({ onSubmit, onCancel }) => {
 
     // Email validation (optional but must be valid if provided)
     if (clientEmail && clientEmail.trim() !== '') {
+      if (clientEmail.trim().length > 100) {
+        toast.error('Email address must not exceed 100 characters', {
+          position: "top-center",
+          autoClose: 4000,
+        });
+        return;
+      }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(clientEmail)) {
-        toast.error('Invalid email address!', {
+        toast.error('Invalid email address! Use format: name@example.com', {
           position: "top-center",
           autoClose: 4000,
         });
@@ -99,7 +129,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       }
     }
 
-    // ✅ Set submitting state to true
+    //  Set submitting state to true
     setIsSubmitting(true);
 
     try {
@@ -131,7 +161,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
             required
-            disabled={isSubmitting} // ✅ Disable during submission
+            disabled={isSubmitting} //  Disable during submission
           />
           <Input
             label="Phone Number"
@@ -140,7 +170,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={clientPhone}
             onChange={(e) => setClientPhone(e.target.value)}
             required
-            disabled={isSubmitting} // ✅ Disable during submission
+            disabled={isSubmitting} //  Disable during submission
           />
           <Input
             label="Email Address (Optional)"
@@ -149,7 +179,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={clientEmail}
             onChange={(e) => setClientEmail(e.target.value)}
             icon="📧"
-            disabled={isSubmitting} // ✅ Disable during submission
+            disabled={isSubmitting} //  Disable during submission
           />
         </div>
         <div style={{ 
@@ -180,7 +210,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={currentType}
             onChange={(e) => setCurrentType(e.target.value)}
             options={CLOTHING_TYPES}
-            disabled={isSubmitting} // ✅ Disable during submission
+            disabled={isSubmitting} //  Disable during submission
           />
           <Input
             label="Quantity"
@@ -189,7 +219,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             placeholder="Enter quantity"
             value={currentQty}
             onChange={(e) => setCurrentQty(e.target.value)}
-            disabled={isSubmitting} // ✅ Disable during submission
+            disabled={isSubmitting} //  Disable during submission
           />
           <Input
             label="Price (RWF)"
@@ -198,14 +228,14 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             placeholder="Enter price"
             value={currentPrice}
             onChange={(e) => setCurrentPrice(e.target.value)}
-            disabled={isSubmitting} // ✅ Disable during submission
+            disabled={isSubmitting} //  Disable during submission
           />
         </div>
         <Button 
           variant="primary" 
           icon="➕" 
           onClick={handleAddItem}
-          disabled={isSubmitting} // ✅ Disable during submission
+          disabled={isSubmitting} //  Disable during submission
         >
           Add Item
         </Button>
@@ -228,7 +258,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
                     size="small"
                     icon="🗑️"
                     onClick={() => handleRemoveItem(index)}
-                    disabled={isSubmitting} // ✅ Disable during submission
+                    disabled={isSubmitting} //  Disable during submission
                   />
                 </div>
               </div>
@@ -244,14 +274,14 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             value={paymentMethod}
             onChange={(e) => setPaymentMethod(e.target.value)}
             options={PAYMENT_METHODS.map(m => ({ value: m, label: m }))}
-            disabled={isSubmitting} // ✅ Disable during submission
+            disabled={isSubmitting} //  Disable during submission
           />
           <Select
             label="Payment Status"
             value={paymentStatus}
             onChange={(e) => setPaymentStatus(e.target.value)}
             options={PAYMENT_STATUSES.map(s => ({ value: s, label: s }))}
-            disabled={isSubmitting} // ✅ Disable during submission
+            disabled={isSubmitting} //  Disable during submission
           />
         </div>
       </Card>
@@ -290,7 +320,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
           icon={isSubmitting ? "⏳" : "✅"} 
           onClick={handleSubmit} 
           fullWidth
-          disabled={isSubmitting} // ✅ Disable button during submission
+          disabled={isSubmitting} //  Disable button during submission
         >
           {isSubmitting ? 'Creating Order...' : 'Create Order'}
         </Button>
@@ -298,7 +328,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
           variant="secondary" 
           icon="✖" 
           onClick={onCancel}
-          disabled={isSubmitting} // ✅ Disable cancel during submission
+          disabled={isSubmitting} //  Disable cancel during submission
         >
           Cancel
         </Button>
