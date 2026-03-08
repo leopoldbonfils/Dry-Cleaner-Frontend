@@ -268,7 +268,7 @@ const LoginPage = () => {
                 ) : (
                   <>
                     <span>Sign In</span>
-                    <span className="btn-arrow">→</span>
+                    
                   </>
                 )}
               </button>
