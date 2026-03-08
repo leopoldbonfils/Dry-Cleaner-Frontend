@@ -147,3 +147,33 @@
     width: 100%;
   }
 }
+/* INLINE FIELD VALIDATION (NewOrder) */
+.form-field-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Error border applied via parent wrapper */
+.field-has-error input,
+.field-has-error select {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10) !important;
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-5px); }
+  40%       { transform: translateX(5px); }
+  60%       { transform: translateX(-3px); }
+  80%       { transform: translateX(3px); }
+}
+
+.field-error-msg {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ef4444;
+  line-height: 1.4;
+}
