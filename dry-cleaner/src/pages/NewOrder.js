@@ -23,6 +23,34 @@ const NewOrder = ({ onSubmit, onCancel }) => {
   const handleAddItem = () => {
     const qty = parseInt(currentQty);
     const price = parseInt(currentPrice);
+    if (!currentQty || !currentPrice) {
+      toast.warning('Please enter both quantity and price', {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      return;
+    }
+    if (isNaN(qty) || qty < 1) {
+      toast.error('Quantity must be at least 1', {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      return;
+    }
+    if (qty > 999) {
+      toast.error('Quantity cannot exceed 999 pieces per item', {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      return;
+    }
+    if (isNaN(price) || price < 1) {
+      toast.error('Price must be greater than 0 RWF', {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      return;
+    }
     if (qty > 0 && price > 0) {
       const typeLabel = CLOTHING_TYPES.find((t) => t.value === currentType)?.label || currentType;
       setItems([...items, {
@@ -85,25 +113,35 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       });
       return;
     }
-    if (clientName.trim().length > 60) {
-      toast.error('Client name must not exceed 60 characters', {
+    if (/^\d+$/.test(clientName.trim())) {
+      toast.error('Client name cannot be numbers only', {
         position: "top-center",
         autoClose: 4000,
       });
       return;
     }
 
-    // Phone validation — exactly 10 digits, Rwandan format
-    if (clientPhone.replace(/\D/g, '').length !== 10) {
-      toast.error(`Phone number must be exactly 10 digits (you entered ${clientPhone.replace(/\D/g, '').length})`, {
+    // Phone validation — Rwanda local (07XXXXXXXX) OR international (+countrycode...)
+    const cleanPhone = clientPhone.replace(/[\s\-().]/g, '');
+    const rwandaRegex = /^07[2-9]\d{7}$/;
+    const internationalRegex = /^\+?[1-9]\d{6,14}$/;
+
+    if (cleanPhone.length < 7) {
+      toast.error('Phone number is too short — minimum 7 digits', {
         position: "top-center",
         autoClose: 4000,
       });
       return;
     }
-    const phoneRegex = /^07[2-9]\d{7}$/;
-    if (!phoneRegex.test(clientPhone)) {
-      toast.error('Invalid phone number! Must start with 072–079 (e.g. 0781234567)', {
+    if (cleanPhone.length > 15) {
+      toast.error('Phone number is too long — maximum 15 digits (international standard)', {
+        position: "top-center",
+        autoClose: 4000,
+      });
+      return;
+    }
+    if (!rwandaRegex.test(cleanPhone) && !internationalRegex.test(cleanPhone)) {
+      toast.error('Invalid phone number! Use local (078XXXXXXX) or international (+1234567890)', {
         position: "top-center",
         autoClose: 4000,
       });
@@ -119,9 +157,9 @@ const NewOrder = ({ onSubmit, onCancel }) => {
         });
         return;
       }
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(clientEmail)) {
-        toast.error('Invalid email address! Use format: name@example.com', {
+      const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.(com|net|org|gov|edu|co|rw|fr|uk|us|de|io|ai|app|dev|info|biz|me|tv)(\.[a-zA-Z]{2})?$/i;
+      if (!emailRegex.test(clientEmail.trim())) {
+        toast.error('Invalid email! Use a valid domain like .com, .rw, .org', {
           position: "top-center",
           autoClose: 4000,
         });
@@ -168,7 +206,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             type="tel"
             placeholder="078XXXXXXX"
             value={clientPhone}
-            onChange={(e) => setClientPhone(e.target.value)}
+            onChange={(e) => setClientPhone(e.target.value.replace(/[^0-9+\-\s().]/g, '').slice(0, 16))}
             required
             disabled={isSubmitting} //  Disable during submission
           />
