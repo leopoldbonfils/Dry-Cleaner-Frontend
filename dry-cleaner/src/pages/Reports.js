@@ -91,14 +91,14 @@ const Reports = ({ orders }) => {
 
     // Calculate statistics
     const totalOrders = filteredOrders.length;
-    const totalRevenue = filteredOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+    const totalRevenue = filteredOrders.reduce((sum, order) => sum + (parseFloat(order.totalAmount) || 0), 0);
     const paidOrders = filteredOrders.filter(o => o.paymentStatus === 'Paid');
     const unpaidOrders = filteredOrders.filter(o => o.paymentStatus === 'Unpaid');
     const partialOrders = filteredOrders.filter(o => o.paymentStatus === 'Partial');
     
-    const paidRevenue = paidOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-    const unpaidRevenue = unpaidOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-    const partialRevenue = partialOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+    const paidRevenue = paidOrders.reduce((sum, order) => sum + (parseFloat(order.totalAmount) || 0), 0);
+    const unpaidRevenue = unpaidOrders.reduce((sum, order) => sum + (parseFloat(order.totalAmount) || 0), 0);
+    const partialRevenue = partialOrders.reduce((sum, order) => sum + (parseFloat(order.totalAmount) || 0), 0);
 
     // Status breakdown
     const statusBreakdown = {
@@ -269,25 +269,25 @@ const Reports = ({ orders }) => {
                   <div className="summary-value">{reportData.totalOrders}</div>
                 </div>
               </div>
-              <div className="summary-card summary-revenue">
-                <div className="summary-icon">💰</div>
-                <div className="summary-info">
-                  <div className="summary-label">Total Revenue</div>
-                  <div className="summary-value">{formatCurrency(reportData.totalRevenue)}</div>
-                </div>
-              </div>
               <div className="summary-card summary-paid">
                 <div className="summary-icon">✅</div>
                 <div className="summary-info">
-                  <div className="summary-label">Paid Revenue</div>
-                  <div className="summary-value">{formatCurrency(reportData.paidRevenue)}</div>
+                  <div className="summary-label">Paid Orders</div>
+                  <div className="summary-value">{reportData.paidOrders}</div>
                 </div>
               </div>
               <div className="summary-card summary-unpaid">
-                <div className="summary-icon">⚠️</div>
+                <div className="summary-icon">⏳</div>
                 <div className="summary-info">
-                  <div className="summary-label">Unpaid Amount</div>
-                  <div className="summary-value">{formatCurrency(reportData.unpaidRevenue)}</div>
+                  <div className="summary-label">Unpaid Orders</div>
+                  <div className="summary-value">{reportData.unpaidOrders}</div>
+                </div>
+              </div>
+              <div className="summary-card summary-partial">
+                <div className="summary-icon">🔄</div>
+                <div className="summary-info">
+                  <div className="summary-label">Partial Orders</div>
+                  <div className="summary-value">{reportData.partialOrders}</div>
                 </div>
               </div>
             </div>

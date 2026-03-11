@@ -8,20 +8,33 @@ import { formatCurrency, formatDate } from '../utils/helpers';
 import { ordersAPI } from '../components/services/api';
 import './OrderDetails.css';
 
+/* ── Confirm Modal ─────────────────────────────────────────────── */
+const ConfirmModal = ({ title, message, onConfirm, onCancel, confirmLabel = 'Yes', confirmClass = 'modal-btn-danger' }) => (
+  <div className="modal-overlay" onClick={onCancel}>
+    <div className="modal-box" onClick={e => e.stopPropagation()}>
+      <h3 className="modal-title">{title}</h3>
+      <p className="modal-message">{message}</p>
+      <div className="modal-actions">
+        <button className="modal-btn modal-btn-cancel" onClick={onCancel}>Cancel</button>
+        <button className={`modal-btn ${confirmClass}`} onClick={onConfirm}>{confirmLabel}</button>
+      </div>
+    </div>
+  </div>
+);
+
 const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const fetchOrder = useCallback(async () => {
     try {
       setLoading(true);
       console.log(`📖 Fetching order details for ID: ${orderId}`);
-      
       const data = await ordersAPI.getById(orderId);
       console.log('✅ Order details fetched:', data);
-      
       setOrder(data);
       setError(null);
     } catch (err) {
@@ -41,10 +54,8 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
       setUpdating(true);
       const newStatus = e.target.value;
       console.log(`🔄 Updating order status to: ${newStatus}`);
-      
       await ordersAPI.update(orderId, { status: newStatus });
       console.log('✅ Status updated successfully');
-      
       await fetchOrder();
       onUpdate && onUpdate();
     } catch (err) {
@@ -60,10 +71,8 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
       setUpdating(true);
       const newPaymentStatus = e.target.value;
       console.log(`💳 Updating payment status to: ${newPaymentStatus}`);
-      
       await ordersAPI.update(orderId, { paymentStatus: newPaymentStatus });
       console.log('✅ Payment status updated successfully');
-      
       await fetchOrder();
       onUpdate && onUpdate();
     } catch (err) {
@@ -82,10 +91,8 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
         setUpdating(true);
         const nextStatus = ORDER_STATUSES[currentStatusIndex + 1];
         console.log(`➡️ Moving order to next status: ${nextStatus}`);
-        
         await ordersAPI.update(orderId, { status: nextStatus });
         console.log('✅ Order moved to next status');
-        
         await fetchOrder();
         onUpdate && onUpdate();
       } catch (err) {
@@ -101,10 +108,8 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
     try {
       setUpdating(true);
       console.log('💰 Marking order as paid...');
-      
       await ordersAPI.update(orderId, { paymentStatus: 'Paid' });
       console.log('✅ Order marked as paid');
-      
       await fetchOrder();
       onUpdate && onUpdate();
     } catch (err) {
@@ -115,20 +120,17 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
     }
   }, [orderId, fetchOrder, onUpdate]);
 
-  const handleDelete = useCallback(async () => {
-    if (window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
-      try {
-        console.log(`🗑️ Deleting order ID: ${orderId}`);
-        
-        await ordersAPI.delete(orderId);
-        console.log('✅ Order deleted successfully');
-        
-        onDelete && onDelete();
-        onBack();
-      } catch (err) {
-        console.error('❌ Failed to delete order:', err);
-        alert('Failed to delete order');
-      }
+  const confirmDelete = useCallback(async () => {
+    setShowDeleteModal(false);
+    try {
+      console.log(`🗑️ Deleting order ID: ${orderId}`);
+      await ordersAPI.delete(orderId);
+      console.log('✅ Order deleted successfully');
+      onDelete && onDelete();
+      onBack();
+    } catch (err) {
+      console.error('❌ Failed to delete order:', err);
+      alert('Failed to delete order');
     }
   }, [orderId, onDelete, onBack]);
 
@@ -158,16 +160,28 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
 
   return (
     <div className="order-details-new">
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <ConfirmModal
+          title="Delete Order?"
+          message={`This will permanently delete order ${order.orderCode}. This action cannot be undone.`}
+          confirmLabel="Delete"
+          confirmClass="modal-btn-danger"
+          onConfirm={confirmDelete}
+          onCancel={() => setShowDeleteModal(false)}
+        />
+      )}
+
       {/* Header with Back Button */}
       <div className="od-header">
         <Button variant="secondary" icon="←" onClick={onBack} className="back-button">
           Back to Orders
         </Button>
         <div className="od-header-actions">
-          <Button 
-            variant="danger" 
-            icon="🗑️" 
-            onClick={handleDelete}
+          <Button
+            variant="danger"
+            icon="🗑️"
+            onClick={() => setShowDeleteModal(true)}
             disabled={updating}
           >
             Delete
@@ -177,12 +191,12 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
 
       {/* Main Grid Layout - 2 Columns: Timeline + Details + Info */}
       <div className="od-main-grid">
-        
+
         {/* LEFT COLUMN: TIMELINE (Sticky on desktop) */}
         <div className="od-timeline-section">
           <Card title="Order Progress" icon="📊" className="timeline-card">
             <div className="od-progress-bar">
-              <div 
+              <div
                 className="od-progress-fill"
                 style={{ width: `${((currentStatusIndex + 1) / ORDER_STATUSES.length) * 100}%` }}
               ></div>
@@ -211,8 +225,8 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
 
         {/* CENTER/RIGHT COLUMN: MAIN CONTENT */}
         <div className="od-content-section">
-          
-          {/* ORDER SUMMARY CARD - Key Information at Top */}
+
+          {/* ORDER SUMMARY CARD */}
           <div className="od-summary-card">
             <div className="od-summary-left">
               <div className="od-order-code-box">
@@ -238,7 +252,7 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
 
           {/* 3-COLUMN CARD GRID */}
           <div className="od-cards-grid">
-            
+
             {/* CLIENT INFO CARD */}
             <Card title="Client Information" icon="👤" className="od-info-card">
               <div className="od-client-row">
@@ -255,7 +269,6 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
                   <span className="od-value">{order.clientPhone}</span>
                 </div>
               </div>
-              {/* ✅ Add Email Display */}
               {order.clientEmail && (
                 <div className="od-client-row">
                   <span className="od-icon">📧</span>
@@ -302,9 +315,9 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
           {/* QUICK ACTIONS */}
           <div className="od-actions-row">
             {currentStatusIndex < ORDER_STATUSES.length - 1 && (
-              <Button 
-                variant="primary" 
-                icon="➡️" 
+              <Button
+                variant="primary"
+                icon="➡️"
                 onClick={handleMoveNext}
                 disabled={updating}
                 className="od-action-btn"
@@ -313,9 +326,9 @@ const OrderDetails = ({ orderId, onBack, onUpdate, onDelete }) => {
               </Button>
             )}
             {order.paymentStatus !== 'Paid' && (
-              <Button 
-                variant="success" 
-                icon="💰" 
+              <Button
+                variant="success"
+                icon="💰"
                 onClick={handleMarkAsPaid}
                 disabled={updating}
                 className="od-action-btn"
