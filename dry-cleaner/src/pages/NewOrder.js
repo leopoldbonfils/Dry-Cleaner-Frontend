@@ -266,7 +266,7 @@ const NewOrder = ({ onSubmit, onCancel }) => {
             </div>
             {isCustomType ? (
               <Input
-                placeholder="e.g. Agaseke Bag, Lab Coat..."
+                placeholder="e.g. Ikanzu, Lab Coat..."
                 value={customTypeValue}
                 onChange={(e) => setCustomTypeValue(e.target.value)}
                 disabled={isSubmitting}
