@@ -8,7 +8,7 @@ import { formatCurrency, formatDate } from '../utils/helpers';
 import { ordersAPI } from '../components/services/api';
 import './OrderDetails.css';
 
-/* ── Confirm Modal ─────────────────────────────────────────────── */
+
 const ConfirmModal = ({ title, message, onConfirm, onCancel, confirmLabel = 'Yes', confirmClass = 'modal-btn-danger' }) => (
   <div className="modal-overlay" onClick={onCancel}>
     <div className="modal-box" onClick={e => e.stopPropagation()}>
