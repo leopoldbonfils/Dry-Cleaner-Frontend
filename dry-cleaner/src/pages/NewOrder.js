@@ -19,6 +19,8 @@ const NewOrder = ({ onSubmit, onCancel }) => {
   const [currentType, setCurrentType] = useState('shirt');
   const [currentQty, setCurrentQty] = useState('');
   const [currentPrice, setCurrentPrice] = useState('');
+  const [isCustomType, setIsCustomType] = useState(false);
+  const [customTypeValue, setCustomTypeValue] = useState('');
 
   const handleAddItem = () => {
     const qty = parseInt(currentQty);
@@ -52,13 +54,16 @@ const NewOrder = ({ onSubmit, onCancel }) => {
       return;
     }
     if (qty > 0 && price > 0) {
-      const typeLabel = CLOTHING_TYPES.find((t) => t.value === currentType)?.label || currentType;
+      const typeLabel = isCustomType
+        ? customTypeValue.trim()
+        : CLOTHING_TYPES.find((t) => t.value === currentType)?.label || currentType;
       setItems([...items, {
         type: typeLabel,
         quantity: qty,
         price: price
       }]);
       setCurrentQty('');
+      if (isCustomType) setCustomTypeValue('');
       
       toast.success(`${typeLabel} added successfully!`, {
         position: "bottom-right",
@@ -243,13 +248,38 @@ const NewOrder = ({ onSubmit, onCancel }) => {
 
       <Card title="Add Clothing Items" icon="👕">
         <div className="form-grid">
-          <Select
-            label="Clothing Type"
-            value={currentType}
-            onChange={(e) => setCurrentType(e.target.value)}
-            options={CLOTHING_TYPES}
-            disabled={isSubmitting} //  Disable during submission
-          />
+          <div className="clothing-type-field">
+            <div className="clothing-type-label-row">
+              <span className="clothing-type-label">Clothing Type</span>
+              <label className="custom-type-toggle">
+                <input
+                  type="checkbox"
+                  checked={isCustomType}
+                  onChange={(e) => {
+                    setIsCustomType(e.target.checked);
+                    setCustomTypeValue('');
+                  }}
+                  disabled={isSubmitting}
+                />
+                <span>Enter manually</span>
+              </label>
+            </div>
+            {isCustomType ? (
+              <Input
+                placeholder="e.g. Agaseke Bag, Lab Coat..."
+                value={customTypeValue}
+                onChange={(e) => setCustomTypeValue(e.target.value)}
+                disabled={isSubmitting}
+              />
+            ) : (
+              <Select
+                value={currentType}
+                onChange={(e) => setCurrentType(e.target.value)}
+                options={CLOTHING_TYPES}
+                disabled={isSubmitting}
+              />
+            )}
+          </div>
           <Input
             label="Quantity"
             type="number"

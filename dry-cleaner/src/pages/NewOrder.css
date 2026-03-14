@@ -177,3 +177,43 @@
   color: #ef4444;
   line-height: 1.4;
 }
+
+/* Custom clothing type toggle */
+.clothing-type-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clothing-type-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clothing-type-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.custom-type-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-type-toggle input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--accent-primary, #3b82f6);
+  cursor: pointer;
+}
+
+.custom-type-toggle:hover span {
+  color: var(--text-primary);
+}
