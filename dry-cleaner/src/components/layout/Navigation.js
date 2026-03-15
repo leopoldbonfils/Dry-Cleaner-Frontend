@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { MENU_ITEMS } from '../../utils/constants';
 import './Navigation.css';
 
-/* ── Confirm Modal ─────────────────────────────────────────────── */
+/*  Confirm Modal  */
 const ConfirmModal = ({ title, message, onConfirm, onCancel, confirmLabel = 'Yes', confirmClass = 'modal-btn-confirm' }) => (
   <div className="modal-overlay" onClick={onCancel}>
     <div className="modal-box" onClick={e => e.stopPropagation()}>
@@ -18,10 +18,12 @@ const ConfirmModal = ({ title, message, onConfirm, onCancel, confirmLabel = 'Yes
   </div>
 );
 
-/* ── Navigation ────────────────────────────────────────────────── */
+/*  Navigation  */
 const Navigation = ({ currentView, onNavigate, collapsed, open }) => {
   const navigate = useNavigate();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const businessName = user.businessName || 'CleanPro';
 
   const menuWithNewOrder = [
     MENU_ITEMS[0],
@@ -59,7 +61,7 @@ const Navigation = ({ currentView, onNavigate, collapsed, open }) => {
             <div className="logo-icon">🧺</div>
             {!collapsed && (
               <div className="logo-text">
-                <h1>CleanPro</h1>
+                <h1>{businessName}</h1>
                 <p>Dry Cleaning</p>
               </div>
             )}
